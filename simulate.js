@@ -1,11 +1,11 @@
 let ctx = null;
-let dots = [];
+let objects = [];
 const t = 1;
 const G = 10000 * t;
 let WIDTH = 0;
 let HEIGHT = 0;
-let LAST_LOCATION_LIST_SIZE = 5;
-const SIMULATION_INTERVAL = 0.01;
+let LAST_LOCATION_LIST_SIZE = 4;
+const SIMULATION_INTERVAL = 0.2;
 const RADIUS_SCALE = 1500;
 const colors = ["yellow", "red", "blue", "pink", "purple", "green", "white"];
 //----------//----------//----------//----------//----------//----------
@@ -164,26 +164,29 @@ function start() {
 }
 
 function simulate() {
-  drawDots();
+  drawObjects();
   calcNexts();
 }
 
 function createDot() {
-  dots.push(new Dot(0, 0.001, new Vector(0, 150, 390), new Vector(-50, 16, -2)));
-  dots.push(new Dot(1, 0.001, new Vector(-100, -100, 270), new Vector(-25, -20, 2)));
-  dots.push(new Dot(2, 0.001, new Vector(0, -110, 350), new Vector(-20, -20, 2)));
-  dots.push(new Dot(4, 0.001, new Vector(0, 0, 200), new Vector(-5, -28, 0)));
-  dots.push(new Dot(3, 25, new Vector(0, 150, 500), new Vector(0, -0.02, 0)));
+  objects.push(new Dot(0, 0.01, new Vector(0, 150, 390), new Vector(-50, 16, -2)));
+  objects.push(new Dot(1, 0.01, new Vector(-100, -200, 270), new Vector(-25, -20, 2)));
+  objects.push(new Dot(2, 0.1, new Vector(0, -110, 350), new Vector(-20, -20, 2)));
+  objects.push(new Dot(3, 0.1, new Vector(0, 0, 200), new Vector(-5, -28, 0)));
+  objects.push(new Dot(4, 27, new Vector(0, 150, 500), new Vector(0.3, 0.1, 0.08)));
+  objects.push(new Dot(5, 0.2, new Vector(500, -150, 700), new Vector(-20, 0, -2)));
 }
 
-function drawDots() {
+function drawObjects() {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  for (let dot of dots) {
-    if (dot.isInView) {
-      dot.drawLastLocations();
-      dot.draw();
+  objects.sort(compareObjectsByZLocation);
+
+  for (let object of objects) {
+    if (object.isInView) {
+      object.drawLastLocations();
+      object.draw();
     } else {
       console.log(
         "##### NOT SEEN x: " +
@@ -195,15 +198,27 @@ function drawDots() {
       );
     }
 
-    dot.moveToNextLocation();
+    object.moveToNextLocation();
   }
 
   console.log("------------------------------------------------------------");
 }
 
+function compareObjectsByZLocation(a, b) {
+  if (a.nextLocVec.z < b.nextLocVec.z) {
+    return 1;
+  } else if (a.nextLocVec.z > b.nextLocVec.z) {
+    return -1;
+  }
+
+  return 0;
+}
+
+objs.sort(compare);
+
 function calcNexts() {
-  for (let currentDot of dots) {
-    calcNextLocVel(currentDot);
+  for (let currentObject of objects) {
+    calcNextLocVel(currentObject);
   }
 }
 
@@ -219,27 +234,29 @@ function calcNextLocVel(currentDot) {
   currentDot.nextVelVec = velVec;
 }
 
-function calcNextVel(currentDot) {
+function calcNextVel(currentObject) {
   let distanceSquared = 0;
   let acceleration = 0;
-  let transformedDotLoc = null;
-  let totalAcceleration = new Vector(currentDot.velVec.x, currentDot.velVec.y, currentDot.velVec.z);
+  var transformedObjectLoc = null;
+  let totalAcceleration = new Vector(
+    currentObject.velVec.x,
+    currentObject.velVec.y,
+    currentObject.velVec.z
+  );
 
-  const transformedCurrentDotLoc = transform(currentDot.locVec, currentDot.locVec);
-
-  for (let dot of dots) {
-    if (currentDot.id !== dot.id) {
-      transformedDotLoc = transform(dot.locVec, currentDot.locVec);
+  for (let object of objects) {
+    if (currentObject.id !== object.id) {
+      transformedObjectLoc = transform(object.locVec, currentObject.locVec);
       distanceSquared =
-        Math.pow(transformedDotLoc.x - transformedCurrentDotLoc.x, 2) +
-        Math.pow(transformedDotLoc.y - transformedCurrentDotLoc.y, 2) +
-        Math.pow(transformedDotLoc.z - transformedCurrentDotLoc.z, 2);
+        Math.pow(transformedObjectLoc.x, 2) +
+        Math.pow(transformedObjectLoc.y, 2) +
+        Math.pow(transformedObjectLoc.z, 2);
 
-      acceleration = (G * dot.mass) / distanceSquared;
+      acceleration = (G * object.mass) / distanceSquared;
 
-      totalAcceleration.x += (acceleration * transformedDotLoc.x) / Math.sqrt(distanceSquared);
-      totalAcceleration.y += (acceleration * transformedDotLoc.y) / Math.sqrt(distanceSquared);
-      totalAcceleration.z += (acceleration * transformedDotLoc.z) / Math.sqrt(distanceSquared);
+      totalAcceleration.x += (acceleration * transformedObjectLoc.x) / Math.sqrt(distanceSquared);
+      totalAcceleration.y += (acceleration * transformedObjectLoc.y) / Math.sqrt(distanceSquared);
+      totalAcceleration.z += (acceleration * transformedObjectLoc.z) / Math.sqrt(distanceSquared);
     }
   }
 
