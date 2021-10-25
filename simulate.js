@@ -18,51 +18,7 @@ class Vector {
   }
 }
 
-class LinkedList {
-  constructor() {
-    this.nodes = [];
-  }
-
-  size() {
-    return this.nodes.length;
-  }
-
-  insertAt(index, value) {
-    const previousNode = this.nodes[index - 1] || null;
-    const nextNode = this.nodes[index] || null;
-    const node = { value, next: nextNode };
-
-    if (previousNode) previousNode.next = node;
-    this.nodes.splice(index, 0, node);
-  }
-
-  insertFirst(value) {
-    if (this.size() == LAST_LOCATION_LIST_SIZE) {
-      this.removeAt(this.size() - 1);
-    }
-
-    this.insertAt(0, value);
-  }
-
-  getAt(index) {
-    return this.nodes[index];
-  }
-
-  removeAt(index) {
-    const previousNode = this.nodes[index - 1];
-    const nextNode = this.nodes[index + 1] || null;
-
-    if (previousNode) previousNode.next = nextNode;
-
-    return this.nodes.splice(index, 1);
-  }
-
-  clear() {
-    this.nodes = [];
-  }
-}
-
-class Dot {
+class Object {
   constructor(id, mass, locVec, velVec) {
     this.id = id;
     this.mass = mass;
@@ -70,7 +26,7 @@ class Dot {
     this.velVec = velVec;
     this.nextLocVec = locVec;
     this.nextVelVec = velVec;
-    this.lastLocationList = new LinkedList();
+    this.lastLocations = [];
   }
 
   draw() {
@@ -96,11 +52,8 @@ class Dot {
   drawLastLocations() {
     var pathX = 0;
     var pathY = 0;
-    var locVec = null;
 
-    for (let i = 0; i < this.lastLocationList.size(); i++) {
-      locVec = this.lastLocationList.getAt(i).value;
-
+    for (let locVec of this.lastLocations) {
       let x = parseInt(locVec.x);
       let y = parseInt(locVec.y);
       pathX = WIDTH / 2 + x;
@@ -124,9 +77,10 @@ class Dot {
   }
 
   moveToNextLocation() {
-    this.lastLocationList.insertFirst(
-      new Vector(this.nextLocVec.x, this.nextLocVec.y, this.nextLocVec.z)
-    );
+    if (this.lastLocations.length == LAST_LOCATION_LIST_SIZE) {
+      this.lastLocations.pop();
+    }
+    this.lastLocations.unshift(new Vector(this.nextLocVec.x, this.nextLocVec.y, this.nextLocVec.z));
     this.locVec = { ...this.nextLocVec };
     this.velVec = { ...this.nextVelVec };
   }
@@ -152,14 +106,13 @@ function start() {
   const canvas = document.getElementById("screen");
   WIDTH = window.innerWidth;
   HEIGHT = window.innerHeight;
-  console.log(WIDTH + ", " + HEIGHT);
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
   ctx = canvas.getContext("2d");
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  createDot();
+  createObjects();
   setInterval(simulate, SIMULATION_INTERVAL * 1000);
 }
 
@@ -168,13 +121,13 @@ function simulate() {
   calcNexts();
 }
 
-function createDot() {
-  objects.push(new Dot(0, 0.01, new Vector(0, 150, 390), new Vector(-50, 16, -2)));
-  objects.push(new Dot(1, 0.01, new Vector(-100, -200, 270), new Vector(-25, -20, 2)));
-  objects.push(new Dot(2, 0.1, new Vector(0, -110, 350), new Vector(-20, -20, 2)));
-  objects.push(new Dot(3, 0.1, new Vector(0, 0, 200), new Vector(-5, -28, 0)));
-  objects.push(new Dot(4, 27, new Vector(0, 150, 500), new Vector(0.3, 0.1, 0.08)));
-  objects.push(new Dot(5, 0.2, new Vector(500, -150, 700), new Vector(-20, 0, -2)));
+function createObjects() {
+  objects.push(new Object(0, 0.01, new Vector(0, 150, 390), new Vector(-50, 16, -2)));
+  objects.push(new Object(1, 0.01, new Vector(-100, -200, 270), new Vector(-25, -20, 2)));
+  objects.push(new Object(2, 0.1, new Vector(0, -110, 350), new Vector(-20, -20, 2)));
+  objects.push(new Object(3, 0.1, new Vector(0, 0, 200), new Vector(-5, -28, 0)));
+  objects.push(new Object(4, 27, new Vector(0, 150, 500), new Vector(0.3, 0.1, 0.08)));
+  objects.push(new Object(5, 0.2, new Vector(500, -150, 700), new Vector(-20, 0, -2)));
 }
 
 function drawObjects() {
@@ -187,21 +140,10 @@ function drawObjects() {
     if (object.isInView) {
       object.drawLastLocations();
       object.draw();
-    } else {
-      console.log(
-        "##### NOT SEEN x: " +
-          dot.nextLocVec.x +
-          " y: " +
-          dot.nextLocVec.y +
-          " z: " +
-          dot.nextLocVec.z
-      );
     }
 
     object.moveToNextLocation();
   }
-
-  console.log("------------------------------------------------------------");
 }
 
 function compareObjectsByZLocation(a, b) {
@@ -214,24 +156,22 @@ function compareObjectsByZLocation(a, b) {
   return 0;
 }
 
-objs.sort(compare);
-
 function calcNexts() {
   for (let currentObject of objects) {
     calcNextLocVel(currentObject);
   }
 }
 
-function calcNextLocVel(currentDot) {
-  let velVec = calcNextVel(currentDot);
+function calcNextLocVel(currentObject) {
+  let velVec = calcNextVel(currentObject);
   let locVec = new Vector(
-    currentDot.locVec.x + velVec.x * t,
-    currentDot.locVec.y + velVec.y * t,
-    currentDot.locVec.z + velVec.z * t
+    currentObject.locVec.x + velVec.x * t,
+    currentObject.locVec.y + velVec.y * t,
+    currentObject.locVec.z + velVec.z * t
   );
 
-  currentDot.nextLocVec = locVec;
-  currentDot.nextVelVec = velVec;
+  currentObject.nextLocVec = locVec;
+  currentObject.nextVelVec = velVec;
 }
 
 function calcNextVel(currentObject) {
@@ -263,22 +203,10 @@ function calcNextVel(currentObject) {
   return totalAcceleration;
 }
 
-function transform(dotLocVec, transformPointLocVec) {
+function transform(objectLocVec, transformPointLocVec) {
   return new Vector(
-    dotLocVec.x - transformPointLocVec.x,
-    dotLocVec.y - transformPointLocVec.y,
-    dotLocVec.z - transformPointLocVec.z
+    objectLocVec.x - transformPointLocVec.x,
+    objectLocVec.y - transformPointLocVec.y,
+    objectLocVec.z - transformPointLocVec.z
   );
-}
-
-function cosAlpha(dot, distance) {
-  return dot.locVec.x / distance;
-}
-
-function cosBeta(dot, distance) {
-  return dot.locVec.y / distance;
-}
-
-function calculateTheta(dot, distance) {
-  return dot.locVec.z / distance;
 }
