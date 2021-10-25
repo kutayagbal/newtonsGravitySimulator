@@ -4,10 +4,10 @@ const t = 1;
 const G = 10000 * t;
 let WIDTH = 0;
 let HEIGHT = 0;
-let LAST_LOCATION_LIST_SIZE = 4;
+let LAST_LOCATION_LIST_SIZE = 2;
 const SIMULATION_INTERVAL = 0.1;
-const RADIUS_SCALE = 1500;
-const colors = ["yellow", "red", "blue", "pink", "purple", "green", "white"];
+const RADIUS_SCALE = 10000;
+const colors = ["purple", "red", "blue", "turquoise", "coral", "green", "gold"];
 //----------//----------//----------//----------//----------//----------
 
 class Vector {
@@ -40,12 +40,12 @@ class Particle {
       pathX = WIDTH / 2 + x;
       pathY = HEIGHT / 2 - y;
 
-      let raius = this.scaleRadius();
+      let radius = this.scaleRadius();
 
-      if (raius > 0) {
+      if (radius > 0) {
         screenContext.beginPath();
         screenContext.globalAlpha = 1;
-        screenContext.arc(pathX, pathY, raius, 0, Math.PI * 2);
+        screenContext.arc(pathX, pathY, radius, 0, Math.PI * 2);
         screenContext.closePath();
         screenContext.fillStyle = this.getColor();
         screenContext.fill();
@@ -57,19 +57,23 @@ class Particle {
     var pathX = 0;
     var pathY = 0;
 
-    this.lastLocations.forEach(location => {
-      if (isLocationOnScreen(location)) {
-        let x = parseInt(location.x);
-        let y = parseInt(location.y);
+    this.lastLocations.forEach(obj => {
+      if (isLocationOnScreen(obj.location)) {
+        let x = parseInt(obj.location.x);
+        let y = parseInt(obj.location.y);
         pathX = WIDTH / 2 + x;
         pathY = HEIGHT / 2 - y;
 
-        let raius = RADIUS_SCALE / location.z;
+        let distanceToOrigin = Math.sqrt(
+          Math.pow(obj.location.x, 2) + Math.pow(obj.location.y, 2) + Math.pow(obj.location.z, 2)
+        );
 
-        if (raius > 0) {
+        let radius = (RADIUS_SCALE * Math.cbrt(obj.mass)) / distanceToOrigin;
+
+        if (radius > 0) {
           screenContext.beginPath();
           screenContext.globalAlpha = 0.3;
-          screenContext.arc(pathX, pathY, raius, 0, Math.PI * 2);
+          screenContext.arc(pathX, pathY, radius, 0, Math.PI * 2);
           screenContext.closePath();
           screenContext.fillStyle = this.getColor();
           screenContext.fill();
@@ -86,15 +90,23 @@ class Particle {
     if (this.lastLocations.length == LAST_LOCATION_LIST_SIZE) {
       this.lastLocations.pop();
     }
-    this.lastLocations.unshift(
-      new Vector(this.nextLocation.x, this.nextLocation.y, this.nextLocation.z)
-    );
+
+    this.lastLocations.unshift({
+      mass: this.mass,
+      location: new Vector(this.nextLocation.x, this.nextLocation.y, this.nextLocation.z),
+    });
     this.location = { ...this.nextLocation };
     this.velocity = { ...this.nextVelocity };
   }
 
   scaleRadius() {
-    return RADIUS_SCALE / this.nextLocation.z;
+    let distanceToOrigin = Math.sqrt(
+      Math.pow(this.nextLocation.x, 2) +
+        Math.pow(this.nextLocation.y, 2) +
+        Math.pow(this.nextLocation.z, 2)
+    );
+
+    return (RADIUS_SCALE * Math.cbrt(this.mass)) / distanceToOrigin;
   }
 
   static compareByZLocation(a, b) {
