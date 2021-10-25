@@ -30,22 +30,26 @@ class Particle {
   }
 
   draw() {
-    var pathX = 0;
-    var pathY = 0;
-    let x = parseInt(this.nextLocation.x);
-    let y = parseInt(this.nextLocation.y);
-    pathX = WIDTH / 2 + x;
-    pathY = HEIGHT / 2 - y;
+    this.drawLastLocations();
 
-    let raius = this.scaleRadius();
+    if (isLocationOnScreen(this.nextLocation)) {
+      var pathX = 0;
+      var pathY = 0;
+      let x = parseInt(this.nextLocation.x);
+      let y = parseInt(this.nextLocation.y);
+      pathX = WIDTH / 2 + x;
+      pathY = HEIGHT / 2 - y;
 
-    if (raius > 0) {
-      screenContext.beginPath();
-      screenContext.globalAlpha = 1;
-      screenContext.arc(pathX, pathY, raius, 0, Math.PI * 2);
-      screenContext.closePath();
-      screenContext.fillStyle = this.getColor();
-      screenContext.fill();
+      let raius = this.scaleRadius();
+
+      if (raius > 0) {
+        screenContext.beginPath();
+        screenContext.globalAlpha = 1;
+        screenContext.arc(pathX, pathY, raius, 0, Math.PI * 2);
+        screenContext.closePath();
+        screenContext.fillStyle = this.getColor();
+        screenContext.fill();
+      }
     }
   }
 
@@ -54,20 +58,22 @@ class Particle {
     var pathY = 0;
 
     this.lastLocations.forEach(location => {
-      let x = parseInt(location.x);
-      let y = parseInt(location.y);
-      pathX = WIDTH / 2 + x;
-      pathY = HEIGHT / 2 - y;
+      if (isLocationOnScreen(location)) {
+        let x = parseInt(location.x);
+        let y = parseInt(location.y);
+        pathX = WIDTH / 2 + x;
+        pathY = HEIGHT / 2 - y;
 
-      let raius = RADIUS_SCALE / location.z;
+        let raius = RADIUS_SCALE / location.z;
 
-      if (raius > 0) {
-        screenContext.beginPath();
-        screenContext.globalAlpha = 0.3;
-        screenContext.arc(pathX, pathY, raius, 0, Math.PI * 2);
-        screenContext.closePath();
-        screenContext.fillStyle = this.getColor();
-        screenContext.fill();
+        if (raius > 0) {
+          screenContext.beginPath();
+          screenContext.globalAlpha = 0.3;
+          screenContext.arc(pathX, pathY, raius, 0, Math.PI * 2);
+          screenContext.closePath();
+          screenContext.fillStyle = this.getColor();
+          screenContext.fill();
+        }
       }
     });
   }
@@ -91,16 +97,6 @@ class Particle {
     return RADIUS_SCALE / this.nextLocation.z;
   }
 
-  isInView() {
-    return (
-      this.nextLocation.x <= WIDTH / 2 &&
-      this.nextLocation.x >= -WIDTH / 2 &&
-      this.nextLocation.y <= HEIGHT / 2 &&
-      this.nextLocation.y >= -HEIGHT / 2 &&
-      this.nextLocation.z > 0
-    );
-  }
-
   static compareByZLocation(a, b) {
     if (a.nextLocation.z < b.nextLocation.z) {
       return 1;
@@ -113,6 +109,16 @@ class Particle {
 }
 
 //----------//----------//----------//----------//----------//----------
+
+function isLocationOnScreen(location) {
+  return (
+    location.x <= WIDTH / 2 &&
+    location.x >= -WIDTH / 2 &&
+    location.y <= HEIGHT / 2 &&
+    location.y >= -HEIGHT / 2 &&
+    location.z > 0
+  );
+}
 
 function startSimulation() {
   createParticles();
@@ -156,11 +162,7 @@ function drawParticles() {
   clearScreen();
 
   particles.sort(Particle.compareByZLocation).forEach(particle => {
-    if (particle.isInView()) {
-      particle.drawLastLocations();
-      particle.draw();
-    }
-
+    particle.draw();
     particle.moveToNextLocation();
   });
 }
