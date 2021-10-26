@@ -1,7 +1,7 @@
 let screenContext = null;
 let particles = [];
 const t = 1;
-const G = 10000 * t;
+const G = 10000;
 let WIDTH = 0;
 let HEIGHT = 0;
 let LAST_LOCATION_LIST_SIZE = 2;
@@ -214,7 +214,7 @@ function calculateNextVelocity(currentParticle) {
         Math.pow(transformedParticalLocation.y, 2) +
         Math.pow(transformedParticalLocation.z, 2);
 
-      acceleration = (G * particle.mass) / distanceSquared;
+      acceleration = (G * t * particle.mass) / distanceSquared;
 
       totalAcceleration.x +=
         (acceleration * transformedParticalLocation.x) / Math.sqrt(distanceSquared);
