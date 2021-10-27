@@ -4,7 +4,7 @@ const t = 1;
 const G = 10000;
 let WIDTH = 0;
 let HEIGHT = 0;
-let LAST_LOCATION_LIST_SIZE = 2;
+let LAST_LOCATION_LIST_SIZE = 0;
 const SIMULATION_INTERVAL = 0.1;
 const RADIUS_SCALE = 10000;
 const colors = ["purple", "red", "blue", "turquoise", "coral", "green", "gold"];
@@ -30,7 +30,9 @@ class Particle {
   }
 
   draw() {
-    this.drawLastLocations();
+    if (LAST_LOCATION_LIST_SIZE > 0) {
+      this.drawLastLocations();
+    }
 
     if (isLocationOnScreen(this.nextLocation)) {
       var pathX = 0;
@@ -86,15 +88,24 @@ class Particle {
     return colors[this.id];
   }
 
+  moveLastLocations() {
+    if (LAST_LOCATION_LIST_SIZE > 0) {
+      if (this.lastLocations.length == LAST_LOCATION_LIST_SIZE) {
+        this.lastLocations.pop();
+      }
+
+      this.lastLocations.unshift({
+        mass: this.mass,
+        location: new Vector(this.nextLocation.x, this.nextLocation.y, this.nextLocation.z),
+      });
+    }
+  }
+
   moveToNextLocation() {
-    if (this.lastLocations.length == LAST_LOCATION_LIST_SIZE) {
-      this.lastLocations.pop();
+    if (LAST_LOCATION_LIST_SIZE > 0) {
+      this.moveLastLocations();
     }
 
-    this.lastLocations.unshift({
-      mass: this.mass,
-      location: new Vector(this.nextLocation.x, this.nextLocation.y, this.nextLocation.z),
-    });
     this.location = { ...this.nextLocation };
     this.velocity = { ...this.nextVelocity };
   }
@@ -143,11 +154,9 @@ function createParticles() {
   particles.push(new Particle(1, 0.01, new Vector(-100, -200, 270), new Vector(-25, -20, 2)));
   particles.push(new Particle(2, 0.1, new Vector(0, -110, 350), new Vector(-20, -20, 2)));
   particles.push(new Particle(3, 0.1, new Vector(0, 0, 200), new Vector(-5, -28, 0)));
-  particles.push(new Particle(4, 27, new Vector(0, 150, 500), new Vector(0.3, 0.1, 0.08)));
+  particles.push(new Particle(4, 27, new Vector(0, 150, 500), new Vector(0.3, 0.1, 0.2)));
   particles.push(new Particle(5, 0.2, new Vector(500, -150, 700), new Vector(-20, 0, -2)));
-
   particles.push(new Particle(6, 0.01, new Vector(0, 100, 700), new Vector(-30, 16, -10)));
-  // particles.push(new Particle(7, 0.01, new Vector(-100, -200, 270), new Vector(-25, -20, 2)));
 }
 
 function setupScreen() {
