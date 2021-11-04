@@ -6,8 +6,8 @@ let WIDTH = 0;
 let HEIGHT = 0;
 let LAST_LOCATION_LIST_SIZE = 0;
 const SIMULATION_INTERVAL = 0.1;
-const RADIUS_SCALE = 10000;
-const colors = ["purple", "red", "blue", "turquoise", "coral", "green", "gold"];
+const RADIUS_SCALE = 40000;
+const colors = ["gold", "darkred", "blue", "coral", "aqua", "olive", "purple", "grey"];
 //----------//----------//----------//----------//----------//----------
 
 class Vector {
@@ -150,13 +150,13 @@ function startSimulation() {
 }
 
 function createParticles() {
-  particles.push(new Particle(0, 0.01, new Vector(0, 150, 390), new Vector(-50, 16, -2)));
-  particles.push(new Particle(1, 0.01, new Vector(-100, -200, 270), new Vector(-25, -20, 2)));
-  particles.push(new Particle(2, 0.1, new Vector(0, -110, 350), new Vector(-20, -20, 2)));
-  particles.push(new Particle(3, 0.1, new Vector(0, 0, 200), new Vector(-5, -28, 0)));
-  particles.push(new Particle(4, 27, new Vector(0, 150, 500), new Vector(0.3, 0.1, 0.2)));
-  particles.push(new Particle(5, 0.2, new Vector(500, -150, 700), new Vector(-20, 0, -2)));
-  particles.push(new Particle(6, 0.01, new Vector(0, 100, 700), new Vector(-30, 16, -10)));
+  particles.push(new Particle(0, 8, new Vector(-700, -100, 2000), new Vector(0, 0, 5)));
+  particles.push(new Particle(1, 0.04, new Vector(-800, -100, 1950), new Vector(0, 0, 30)));
+  particles.push(new Particle(2, 0.04, new Vector(-800, -200, 1950), new Vector(0, 0, 30)));
+
+  particles.push(new Particle(3, 7, new Vector(700, -100, 2000), new Vector(0, 0, -5)));
+  particles.push(new Particle(4, 0.04, new Vector(700, -200, 2050), new Vector(0, 0, -30)));
+  particles.push(new Particle(5, 0.04, new Vector(750, 0, 2050), new Vector(0, 0, -30)));
 }
 
 function setupScreen() {
