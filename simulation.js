@@ -5,11 +5,23 @@ const G = 10000;
 let WIDTH = 0;
 let HEIGHT = 0;
 let LAST_LOCATION_LIST_SIZE = 0;
-const SIMULATION_INTERVAL = 0.1;
+let SIMULATION_INTERVAL = 0.05;
+let isSimulationSpeedUp = true;
 const RADIUS_SCALE = 40000;
 const colors = ["gold", "darkred", "blue", "coral", "aqua", "olive", "purple", "grey"];
 //----------//----------//----------//----------//----------//----------
 
+document.addEventListener("keyup", e => {
+  if (e.code === "ArrowUp") {
+    SIMULATION_INTERVAL = (SIMULATION_INTERVAL * 9) / 10;
+  } else if (e.code === "ArrowDown") {
+    SIMULATION_INTERVAL = (SIMULATION_INTERVAL * 11) / 10;
+  } else if (e.code === "ArrowLeft") {
+    particles.forEach(p => (p.nextLocation.z -= 100));
+  } else if (e.code === "ArrowRight") {
+    particles.forEach(p => (p.nextLocation.z += 100));
+  }
+});
 class Vector {
   constructor(x, y, z) {
     this.x = x;
@@ -146,17 +158,18 @@ function isLocationOnScreen(location) {
 function startSimulation() {
   createParticles();
   setupScreen();
-  setInterval(simulate, SIMULATION_INTERVAL * 1000);
+  setTimeout(simulate, SIMULATION_INTERVAL * 1000);
+  // setInterval(simulate, SIMULATION_INTERVAL * 1000);
 }
 
 function createParticles() {
-  particles.push(new Particle(0, 8, new Vector(-700, -100, 2000), new Vector(0, 0, 5)));
-  particles.push(new Particle(1, 0.04, new Vector(-800, -100, 1950), new Vector(0, 0, 30)));
-  particles.push(new Particle(2, 0.04, new Vector(-800, -200, 1950), new Vector(0, 0, 30)));
+  particles.push(new Particle(0, 8, new Vector(-700, -100, 1500), new Vector(0, 0, 5)));
+  particles.push(new Particle(1, 0.04, new Vector(-800, -100, 1450), new Vector(0, 0, 30)));
+  particles.push(new Particle(2, 0.04, new Vector(-800, -200, 1450), new Vector(0, 0, 30)));
 
-  particles.push(new Particle(3, 7, new Vector(700, -100, 2000), new Vector(0, 0, -5)));
-  particles.push(new Particle(4, 0.04, new Vector(700, -200, 2050), new Vector(0, 0, -30)));
-  particles.push(new Particle(5, 0.04, new Vector(750, 0, 2050), new Vector(0, 0, -30)));
+  particles.push(new Particle(3, 7, new Vector(700, -100, 1500), new Vector(0, 0, -5)));
+  particles.push(new Particle(4, 0.04, new Vector(700, -200, 1550), new Vector(0, 0, -30)));
+  particles.push(new Particle(5, 0.04, new Vector(750, 0, 1550), new Vector(0, 0, -30)));
 }
 
 function setupScreen() {
@@ -177,6 +190,22 @@ function clearScreen() {
 function simulate() {
   drawParticles();
   calculateNextLocationsAndVelocities();
+
+  // if (isSimulationSpeedUp) {
+  //   if (SIMULATION_INTERVAL <= 0.1) {
+  //     SIMULATION_INTERVAL = (SIMULATION_INTERVAL * 1001) / 1000;
+  //   } else {
+  //     isSimulationSpeedUp = false;
+  //   }
+  // } else {
+  //   if (SIMULATION_INTERVAL >= 0.001) {
+  //     SIMULATION_INTERVAL = (SIMULATION_INTERVAL * 999) / 1000;
+  //   } else {
+  //     isSimulationSpeedUp = true;
+  //   }
+  // }
+
+  setTimeout(simulate, SIMULATION_INTERVAL * 1000);
 }
 
 function drawParticles() {
