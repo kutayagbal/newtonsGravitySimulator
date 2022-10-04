@@ -160,19 +160,19 @@ function startSimulation() {
 
 function createParticles() {
   particles.push(new Particle(0, 8, 40, new Vector(-1000, -600, 20000), new Vector(0, 0.1, 5.1)));
-  particles.push(new Particle(1, 0.04, 20, new Vector(-1100, -600, 19900), new Vector(0, 0, 30)));
-  particles.push(new Particle(2, 0.04, 20, new Vector(-1100, -500, 19900), new Vector(0, 0, 27)));
+  particles.push(new Particle(1, 0.04, 14, new Vector(-1100, -600, 19900), new Vector(0, 0, 30)));
+  particles.push(new Particle(2, 0.04, 14, new Vector(-1100, -500, 19900), new Vector(0, 0, 27)));
 
   particles.push(new Particle(3, 7, 35, new Vector(400, -600, 20000), new Vector(0.2, 0.1, -5)));
-  particles.push(new Particle(4, 0.04, 20, new Vector(400, -500, 20100), new Vector(0, 0, -30)));
-  particles.push(new Particle(5, 0.04, 20, new Vector(450, -700, 20000), new Vector(0, 0, -30)));
+  particles.push(new Particle(4, 0.04, 10, new Vector(400, -500, 20100), new Vector(0, 0, -30)));
+  particles.push(new Particle(5, 0.04, 10, new Vector(450, -700, 20000), new Vector(0, 0, -30)));
 }
 
 function setupScreen() {
   const screen = document.getElementById('screen');
   WIDTH = window.innerWidth;
   HEIGHT = window.innerHeight;
-  RADIUS = 6 * HEIGHT;
+  RADIUS = 7 * HEIGHT;
   console.log('WIDTH: ' + WIDTH + ' HEIGHT: ' + HEIGHT + ' RADIUS: ' + RADIUS);
   screen.width = WIDTH;
   screen.height = HEIGHT;
