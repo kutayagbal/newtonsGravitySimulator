@@ -6,7 +6,7 @@ let WIDTH = 0;
 let HEIGHT = 0;
 let RADIUS = 0;
 let LAST_LOCATION_LIST_SIZE = 0;
-let SIMULATION_INTERVAL = 0.0000001;
+let SIMULATION_INTERVAL = 0.001;
 let isSimulationSpeedUp = true;
 const colors = [
   'gold',
@@ -230,7 +230,7 @@ function createParticles() {
 }
 
 function createTerrestrialSolarSystem() {
-  particles.push(new Particle(0, 2000000, 5600, new Vector(0, 0, 750000), new Vector(0, 0, 0))); //sun
+  particles.push(new Particle(0, 2000000, 280, new Vector(0, 0, 750000), new Vector(0, 0, 0))); //sun
   particles.push(new Particle(1, 0.33, 40, new Vector(0, 23200, 750000), new Vector(48, 0, 0))); //mercury
   particles.push(new Particle(2, 0.64, 60, new Vector(0, 88400, 750000), new Vector(24, 0, 0))); //mars
   particles.push(new Particle(3, 4.8, 92, new Vector(0, 43200, 750000), new Vector(35, 0, 0))); //venus
@@ -262,7 +262,7 @@ function simulate() {
 }
 
 function projectParticles() {
-  // clearScreen();
+  clearScreen();
 
   particles.sort(Particle.compareByZLocation).forEach(particle => {
     particle.moveToNextLocation(particle.project());
