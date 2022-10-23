@@ -1,14 +1,38 @@
 let screenContext = null;
 let particles = [];
 const t = 1;
-const G = 10000;
+const G = 21.54;
 let WIDTH = 0;
 let HEIGHT = 0;
 let RADIUS = 0;
 let LAST_LOCATION_LIST_SIZE = 0;
-let SIMULATION_INTERVAL = 0.01;
+let SIMULATION_INTERVAL = 0.0000001;
 let isSimulationSpeedUp = true;
-const colors = ['gold', 'darkred', 'blue', 'coral', 'aqua', 'olive', 'purple', 'grey'];
+const colors = [
+  'gold',
+  'white',
+  'crimson',
+  'peru',
+  'blue',
+  'grey',
+  'purple',
+  'olive',
+  'crimson',
+  'green',
+  'aqua',
+  'indigo',
+  'brown',
+  'azure',
+  'fuchsia',
+  'grey',
+  'lime',
+  'pink',
+  'violet',
+  'tomato',
+  'teal',
+  'silver',
+  'peru',
+];
 //----------//----------//----------//----------//----------//----------
 
 document.addEventListener('keyup', e => {
@@ -89,7 +113,10 @@ class Particle {
       screenContext.fillStyle = this.getColor();
       screenContext.fill();
     }
-
+    console.log(
+      'ID: ' + this.id + ' X: ' + centerPathX + ' Y: ' + centerPathY,
+      +' R: ' + screenRadius
+    );
     return { centerPathX, centerPathY, screenRadius };
   }
 
@@ -153,19 +180,62 @@ class Particle {
 //----------//----------//----------//----------//----------//----------
 
 function startSimulation() {
-  createParticles();
+  // createParticles();
+  createTerrestrialSolarSystem();
   setupScreen();
   setTimeout(simulate, SIMULATION_INTERVAL * 1000);
 }
 
 function createParticles() {
-  particles.push(new Particle(0, 8, 40, new Vector(-1000, -600, 20000), new Vector(0, 0.1, 5.1)));
-  particles.push(new Particle(1, 0.04, 14, new Vector(-1100, -600, 19900), new Vector(0, 0, 30)));
-  particles.push(new Particle(2, 0.04, 14, new Vector(-1100, -500, 19900), new Vector(0, 0, 27)));
+  particles.push(
+    new Particle(0, 8, 50, new Vector(-1600, -600, 20000), new Vector(-0.3, 0.1, 5.4))
+  );
+  particles.push(new Particle(1, 0.05, 18, new Vector(-1700, -600, 19900), new Vector(0, 0, 30)));
+  particles.push(new Particle(2, 0.05, 18, new Vector(-1700, -500, 19900), new Vector(0, 0, 27)));
 
-  particles.push(new Particle(3, 7, 35, new Vector(400, -600, 20000), new Vector(0.2, 0.1, -5)));
-  particles.push(new Particle(4, 0.04, 10, new Vector(400, -500, 20100), new Vector(0, 0, -30)));
-  particles.push(new Particle(5, 0.04, 10, new Vector(450, -700, 20000), new Vector(0, 0, -30)));
+  particles.push(new Particle(3, 7, 40, new Vector(0, -600, 20000), new Vector(0, 0.1, -5)));
+  particles.push(new Particle(4, 0.04, 12, new Vector(0, -500, 20100), new Vector(0, 0, -30)));
+  particles.push(new Particle(5, 0.04, 12, new Vector(50, -700, 20000), new Vector(0, 0, -30)));
+  // //
+  particles.push(
+    new Particle(6, 8, 40, new Vector(-1000, 1200, 35000), new Vector(0.2, -0.1, 5.1))
+  );
+  particles.push(new Particle(7, 0.04, 14, new Vector(-1100, 1200, 34900), new Vector(0, 0, 30)));
+  particles.push(new Particle(8, 0.04, 14, new Vector(-1100, 1400, 34900), new Vector(0, 0, 27)));
+
+  particles.push(new Particle(9, 7, 35, new Vector(400, 700, 35000), new Vector(0.4, -0.1, -4.58)));
+  particles.push(new Particle(10, 0.04, 10, new Vector(400, 800, 35100), new Vector(0, 0, -30)));
+  particles.push(new Particle(11, 0.04, 10, new Vector(450, 600, 35000), new Vector(0, 0, -30)));
+  // //
+  particles.push(
+    new Particle(6, 8, 40, new Vector(-6000, 1000, 51000), new Vector(0.5, -0.1, 6.9))
+  );
+  particles.push(new Particle(7, 0.04, 14, new Vector(-6100, 1000, 50900), new Vector(0, 0, 30)));
+  particles.push(new Particle(8, 0.04, 14, new Vector(-6100, 1100, 50900), new Vector(0, 0, 27)));
+
+  particles.push(new Particle(9, 7, 35, new Vector(-4600, 1000, 51000), new Vector(0.9, -0.1, -4)));
+  particles.push(new Particle(10, 0.04, 10, new Vector(-4600, 1100, 51100), new Vector(0, 0, -30)));
+  particles.push(new Particle(11, 0.04, 10, new Vector(-4550, 900, 51000), new Vector(0, 0, -30)));
+  //
+
+  particles.push(new Particle(12, 8, 50, new Vector(4000, 2000, 69000), new Vector(0.5, -0.5, 4)));
+  particles.push(new Particle(13, 0.04, 24, new Vector(4100, 2000, 68900), new Vector(0, 0, 30)));
+  particles.push(new Particle(14, 0.04, 24, new Vector(4100, 1900, 68900), new Vector(0, 0, 27)));
+
+  particles.push(
+    new Particle(15, 7, 45, new Vector(4000, 700, 69000), new Vector(0.2, -0.9, -6.1))
+  );
+  particles.push(new Particle(16, 0.04, 20, new Vector(3900, 700, 69100), new Vector(0, 0, -30)));
+  particles.push(new Particle(17, 0.04, 20, new Vector(4100, 600, 69000), new Vector(0, 0, -30)));
+}
+
+function createTerrestrialSolarSystem() {
+  particles.push(new Particle(0, 2000000, 5600, new Vector(0, 0, 750000), new Vector(0, 0, 0))); //sun
+  particles.push(new Particle(1, 0.33, 40, new Vector(0, 23200, 750000), new Vector(48, 0, 0))); //mercury
+  particles.push(new Particle(2, 0.64, 60, new Vector(0, 88400, 750000), new Vector(24, 0, 0))); //mars
+  particles.push(new Particle(3, 4.8, 92, new Vector(0, 43200, 750000), new Vector(35, 0, 0))); //venus
+  particles.push(new Particle(4, 6, 100, new Vector(0, 60000, 750000), new Vector(30, 0, 0))); //earth
+  particles.push(new Particle(5, 0.073, 20, new Vector(0, 59846, 750000), new Vector(31, 0, 0))); //moon
 }
 
 function setupScreen() {
@@ -192,7 +262,7 @@ function simulate() {
 }
 
 function projectParticles() {
-  clearScreen();
+  // clearScreen();
 
   particles.sort(Particle.compareByZLocation).forEach(particle => {
     particle.moveToNextLocation(particle.project());
