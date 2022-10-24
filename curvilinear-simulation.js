@@ -16,10 +16,10 @@ const colors = [
   'blue',
   'grey',
   'purple',
-  'olive',
-  'crimson',
-  'green',
-  'aqua',
+  'yellowgreen',
+  'white',
+  'lightgrey',
+  'brown',
   'indigo',
   'brown',
   'azure',
@@ -37,13 +37,17 @@ const colors = [
 
 document.addEventListener('keyup', e => {
   if (e.code === 'ArrowUp') {
-    SIMULATION_INTERVAL = (SIMULATION_INTERVAL * 9) / 10;
+    particles.forEach(p => (p.nextLocation.y -= 10000));
   } else if (e.code === 'ArrowDown') {
-    SIMULATION_INTERVAL = (SIMULATION_INTERVAL * 11) / 10;
+    particles.forEach(p => (p.nextLocation.y += 10000));
   } else if (e.code === 'ArrowLeft') {
-    particles.forEach(p => (p.nextLocation.z -= 100));
+    particles.forEach(p => (p.nextLocation.x += 10000));
   } else if (e.code === 'ArrowRight') {
-    particles.forEach(p => (p.nextLocation.z += 100));
+    particles.forEach(p => (p.nextLocation.x -= 10000));
+  } else if (e.code === 'KeyA') {
+    particles.forEach(p => (p.nextLocation.z -= 100000));
+  } else if (e.code === 'KeyS') {
+    particles.forEach(p => (p.nextLocation.z += 100000));
   }
 });
 class Vector {
@@ -181,7 +185,7 @@ class Particle {
 
 function startSimulation() {
   // createParticles();
-  createTerrestrialSolarSystem();
+  createSolarSystem();
   setupScreen();
   setTimeout(simulate, SIMULATION_INTERVAL * 1000);
 }
@@ -229,13 +233,28 @@ function createParticles() {
   particles.push(new Particle(17, 0.04, 20, new Vector(4100, 600, 69000), new Vector(0, 0, -30)));
 }
 
-function createTerrestrialSolarSystem() {
-  particles.push(new Particle(0, 2000000, 280, new Vector(0, 0, 750000), new Vector(0, 0, 0))); //sun
+function createSolarSystem() {
+  particles.push(new Particle(0, 2000000, 560, new Vector(0, 0, 750000), new Vector(0, 0, 0))); //sun
   particles.push(new Particle(1, 0.33, 40, new Vector(0, 23200, 750000), new Vector(48, 0, 0))); //mercury
   particles.push(new Particle(2, 0.64, 60, new Vector(0, 88400, 750000), new Vector(24, 0, 0))); //mars
   particles.push(new Particle(3, 4.8, 92, new Vector(0, 43200, 750000), new Vector(35, 0, 0))); //venus
   particles.push(new Particle(4, 6, 100, new Vector(0, 60000, 750000), new Vector(30, 0, 0))); //earth
   particles.push(new Particle(5, 0.073, 20, new Vector(0, 59846, 750000), new Vector(31, 0, 0))); //moon
+  particles.push(
+    new Particle(6, 189.8, 100, new Vector(0, 300000, 750000), new Vector(13.1, 0, 0))
+  ); //jupiter
+  particles.push(
+    new Particle(7, 0.089, 32, new Vector(0, 299831, 750000), new Vector(15.65, 0, 0))
+  ); //io
+  particles.push(
+    new Particle(8, 0.048, 25, new Vector(0, 299732, 750000), new Vector(15.02, 0, 0))
+  ); //europa
+  particles.push(
+    new Particle(9, 0.148, 42, new Vector(0, 299572, 750000), new Vector(15.84, 0, 0))
+  ); //ganymede
+  particles.push(
+    new Particle(10, 0.107, 38.5, new Vector(0, 299248, 750000), new Vector(15.54, 0, 0))
+  ); //callisto
 }
 
 function setupScreen() {
