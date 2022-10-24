@@ -6,7 +6,7 @@ let WIDTH = 0;
 let HEIGHT = 0;
 let RADIUS = 0;
 let LAST_LOCATION_LIST_SIZE = 0;
-let SIMULATION_INTERVAL = 0.001;
+let SIMULATION_INTERVAL = 0.01;
 let isSimulationSpeedUp = true;
 const colors = [
   'gold',
@@ -15,7 +15,7 @@ const colors = [
   'peru',
   'blue',
   'grey',
-  'purple',
+  'lightpink',
   'yellowgreen',
   'white',
   'lightgrey',
@@ -45,9 +45,9 @@ document.addEventListener('keyup', e => {
   } else if (e.code === 'ArrowRight') {
     particles.forEach(p => (p.nextLocation.x -= 10000));
   } else if (e.code === 'KeyA') {
-    particles.forEach(p => (p.nextLocation.z -= 100000));
+    particles.forEach(p => (p.nextLocation.z -= 50000));
   } else if (e.code === 'KeyS') {
-    particles.forEach(p => (p.nextLocation.z += 100000));
+    particles.forEach(p => (p.nextLocation.z += 50000));
   }
 });
 class Vector {
@@ -234,26 +234,22 @@ function createParticles() {
 }
 
 function createSolarSystem() {
-  particles.push(new Particle(0, 2000000, 560, new Vector(0, 0, 750000), new Vector(0, 0, 0))); //sun
-  particles.push(new Particle(1, 0.33, 40, new Vector(0, 23200, 750000), new Vector(48, 0, 0))); //mercury
-  particles.push(new Particle(2, 0.64, 60, new Vector(0, 88400, 750000), new Vector(24, 0, 0))); //mars
-  particles.push(new Particle(3, 4.8, 92, new Vector(0, 43200, 750000), new Vector(35, 0, 0))); //venus
-  particles.push(new Particle(4, 6, 100, new Vector(0, 60000, 750000), new Vector(30, 0, 0))); //earth
-  particles.push(new Particle(5, 0.073, 20, new Vector(0, 59846, 750000), new Vector(31, 0, 0))); //moon
+  particles.push(new Particle(0, 2000000, 700, new Vector(0, 0, 750000), new Vector(0, 0, 0))); //sun r=2800
+  particles.push(new Particle(1, 0.33, 10, new Vector(0, 23200, 750000), new Vector(48, 0, 0))); //mercury
+  particles.push(new Particle(2, 0.64, 15, new Vector(0, 88400, 750000), new Vector(24, 0, 0))); //mars
+  particles.push(new Particle(3, 4.8, 23, new Vector(0, 43200, 750000), new Vector(35, 0, 0))); //venus
+  particles.push(new Particle(4, 6, 25, new Vector(0, 60000, 750000), new Vector(30, 0, 0))); //earth
+  particles.push(new Particle(5, 0.073, 5, new Vector(0, 59846, 750000), new Vector(31, 0, 0))); //moon
+  particles.push(new Particle(6, 189.8, 71, new Vector(0, 300000, 750000), new Vector(13.1, 0, 0))); //jupiter r=284
+  particles.push(new Particle(7, 0.089, 8, new Vector(0, 299831, 750000), new Vector(15.65, 0, 0))); //io
   particles.push(
-    new Particle(6, 189.8, 100, new Vector(0, 300000, 750000), new Vector(13.1, 0, 0))
-  ); //jupiter
-  particles.push(
-    new Particle(7, 0.089, 32, new Vector(0, 299831, 750000), new Vector(15.65, 0, 0))
-  ); //io
-  particles.push(
-    new Particle(8, 0.048, 25, new Vector(0, 299732, 750000), new Vector(15.02, 0, 0))
+    new Particle(8, 0.048, 6.2, new Vector(0, 299732, 750000), new Vector(15.02, 0, 0))
   ); //europa
   particles.push(
-    new Particle(9, 0.148, 42, new Vector(0, 299572, 750000), new Vector(15.84, 0, 0))
+    new Particle(9, 0.148, 10.5, new Vector(0, 299572, 750000), new Vector(15.84, 0, 0))
   ); //ganymede
   particles.push(
-    new Particle(10, 0.107, 38.5, new Vector(0, 299248, 750000), new Vector(15.54, 0, 0))
+    new Particle(10, 0.107, 9.6, new Vector(0, 299248, 750000), new Vector(15.54, 0, 0))
   ); //callisto
 }
 
