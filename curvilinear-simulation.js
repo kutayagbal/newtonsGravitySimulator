@@ -20,11 +20,11 @@ const colors = [
   'white',
   'lightgrey',
   'brown',
-  'indigo',
-  'brown',
-  'azure',
-  'fuchsia',
-  'grey',
+  'beige',
+  'goldenrod',
+  'powderblue',
+  'dodgerblue',
+  'seagreen',
   'lime',
   'pink',
   'violet',
@@ -240,19 +240,28 @@ function createSolarSystem() {
   particles.push(new Particle(3, 4.8, 23, new Vector(0, 43200, 750000), new Vector(35, 0, 0))); //venus x10
   particles.push(new Particle(4, 6, 25, new Vector(0, 60000, 750000), new Vector(30, 0, 0))); //earth x10
   particles.push(new Particle(5, 0.073, 6.9, new Vector(0, 59846, 750000), new Vector(31, 0, 0))); //moon x10
+  particles.push(new Particle(6, 1898, 112, new Vector(0, 300000, 750000), new Vector(13.1, 0, 0))); //jupiter x4
+  particles.push(new Particle(7, 0.089, 8, new Vector(0, 299831, 750000), new Vector(31.03, 0, 0))); //io x10
   particles.push(
-    new Particle(6, 189.8, 112, new Vector(0, 300000, 750000), new Vector(13.1, 0, 0))
-  ); //jupiter x4
-  particles.push(new Particle(7, 0.089, 8, new Vector(0, 299831, 750000), new Vector(15.65, 0, 0))); //io x10
-  particles.push(
-    new Particle(8, 0.048, 6.2, new Vector(0, 299732, 750000), new Vector(15.02, 0, 0))
+    new Particle(8, 0.048, 6.2, new Vector(0, 299732, 750000), new Vector(27.52, 0, 0))
   ); //europa x10
   particles.push(
-    new Particle(9, 0.148, 10.5, new Vector(0, 299572, 750000), new Vector(15.84, 0, 0))
+    new Particle(9, 0.148, 10.5, new Vector(0, 299572, 750000), new Vector(24.58, 0, 0))
   ); //ganymede x10
   particles.push(
-    new Particle(10, 0.107, 9.6, new Vector(0, 299248, 750000), new Vector(15.54, 0, 0))
+    new Particle(10, 0.107, 9.6, new Vector(0, 299248, 750000), new Vector(21.9, 0, 0))
   ); //callisto x10
+  particles.push(new Particle(11, 568, 93, new Vector(0, 600000, 750000), new Vector(9.68, 0, 0))); //saturn x4
+  particles.push(
+    new Particle(12, 0.134, 10, new Vector(0, 599520, 750000), new Vector(12.25, 0, 0))
+  ); //titan x10
+  particles.push(new Particle(13, 86.8, 60, new Vector(0, 1200000, 750000), new Vector(6.8, 0, 0))); //uranus x6
+  particles.push(
+    new Particle(14, 102.4, 60, new Vector(0, 1800000, 750000), new Vector(5.43, 0, 0))
+  ); //neptune x6
+  particles.push(
+    new Particle(15, 0.02, 5.41, new Vector(0, 1799858, 750000), new Vector(9.82, 0, 0))
+  ); //triton x10
 }
 
 function setupScreen() {
