@@ -117,10 +117,6 @@ class Particle {
       screenContext.fillStyle = this.getColor();
       screenContext.fill();
     }
-    console.log(
-      'ID: ' + this.id + ' X: ' + centerPathX + ' Y: ' + centerPathY,
-      +' R: ' + screenRadius
-    );
     return { centerPathX, centerPathY, screenRadius };
   }
 
@@ -234,34 +230,36 @@ function createParticles() {
 }
 
 function createSolarSystem() {
-  particles.push(new Particle(0, 2000000, 1120, new Vector(0, 0, 750000), new Vector(0, 0, 0))); //sun x4
-  particles.push(new Particle(1, 0.33, 10, new Vector(0, 23200, 750000), new Vector(48, 0, 0))); //mercury x10
-  particles.push(new Particle(2, 0.64, 15, new Vector(0, 88400, 750000), new Vector(24, 0, 0))); //mars x10
-  particles.push(new Particle(3, 4.8, 23, new Vector(0, 43200, 750000), new Vector(35, 0, 0))); //venus x10
-  particles.push(new Particle(4, 6, 25, new Vector(0, 60000, 750000), new Vector(30, 0, 0))); //earth x10
-  particles.push(new Particle(5, 0.073, 6.9, new Vector(0, 59846, 750000), new Vector(31, 0, 0))); //moon x10
-  particles.push(new Particle(6, 1898, 112, new Vector(0, 300000, 750000), new Vector(13.1, 0, 0))); //jupiter x4
-  particles.push(new Particle(7, 0.089, 8, new Vector(0, 299831, 750000), new Vector(31.03, 0, 0))); //io x10
+  particles.push(new Particle(0, 2000000, 560, new Vector(0, 0, 750000), new Vector(0, 0, 0))); //sun x2
+  particles.push(new Particle(1, 0.33, 5, new Vector(0, 23200, 750000), new Vector(48, 0, 0))); //mercury x5
+  particles.push(new Particle(2, 0.64, 7.5, new Vector(0, 88400, 750000), new Vector(24, 0, 0))); //mars x5
+  particles.push(new Particle(3, 4.8, 11.5, new Vector(0, 43200, 750000), new Vector(35, 0, 0))); //venus x5
+  particles.push(new Particle(4, 6, 12.5, new Vector(0, 60000, 750000), new Vector(30, 0, 0))); //earth x5
+  particles.push(new Particle(5, 0.073, 3.45, new Vector(0, 59846, 750000), new Vector(31, 0, 0))); //moon x5
+  particles.push(new Particle(6, 1898, 56, new Vector(0, 300000, 750000), new Vector(13.1, 0, 0))); //jupiter x2
+  particles.push(new Particle(7, 0.089, 4, new Vector(0, 299831, 750000), new Vector(31.03, 0, 0))); //io x5
   particles.push(
-    new Particle(8, 0.048, 6.2, new Vector(0, 299732, 750000), new Vector(27.52, 0, 0))
-  ); //europa x10
+    new Particle(8, 0.048, 3.1, new Vector(0, 299732, 750000), new Vector(27.52, 0, 0))
+  ); //europa x5
   particles.push(
-    new Particle(9, 0.148, 10.5, new Vector(0, 299572, 750000), new Vector(24.58, 0, 0))
-  ); //ganymede x10
+    new Particle(9, 0.148, 5.25, new Vector(0, 299572, 750000), new Vector(24.58, 0, 0))
+  ); //ganymede x5
   particles.push(
-    new Particle(10, 0.107, 9.6, new Vector(0, 299248, 750000), new Vector(21.9, 0, 0))
-  ); //callisto x10
-  particles.push(new Particle(11, 568, 93, new Vector(0, 600000, 750000), new Vector(9.68, 0, 0))); //saturn x4
+    new Particle(10, 0.107, 4.8, new Vector(0, 299248, 750000), new Vector(21.9, 0, 0))
+  ); //callisto x5
   particles.push(
-    new Particle(12, 0.134, 10, new Vector(0, 599520, 750000), new Vector(12.25, 0, 0))
-  ); //titan x10
-  particles.push(new Particle(13, 86.8, 60, new Vector(0, 1200000, 750000), new Vector(6.8, 0, 0))); //uranus x6
+    new Particle(11, 568, 46.5, new Vector(0, 600000, 750000), new Vector(9.68, 0, 0))
+  ); //saturn x2
   particles.push(
-    new Particle(14, 102.4, 60, new Vector(0, 1800000, 750000), new Vector(5.43, 0, 0))
-  ); //neptune x6
+    new Particle(12, 0.134, 5, new Vector(0, 599520, 750000), new Vector(12.25, 0, 0))
+  ); //titan x5
+  particles.push(new Particle(13, 86.8, 30, new Vector(0, 1200000, 750000), new Vector(6.8, 0, 0))); //uranus x3
   particles.push(
-    new Particle(15, 0.02, 5.41, new Vector(0, 1799858, 750000), new Vector(9.82, 0, 0))
-  ); //triton x10
+    new Particle(14, 102.4, 30, new Vector(0, 1800000, 750000), new Vector(5.43, 0, 0))
+  ); //neptune x3
+  particles.push(
+    new Particle(15, 0.02, 2.7, new Vector(0, 1799858, 750000), new Vector(9.82, 0, 0))
+  ); //triton x5
 }
 
 function setupScreen() {
@@ -269,7 +267,6 @@ function setupScreen() {
   WIDTH = window.innerWidth;
   HEIGHT = window.innerHeight;
   RADIUS = 7 * HEIGHT;
-  console.log('WIDTH: ' + WIDTH + ' HEIGHT: ' + HEIGHT + ' RADIUS: ' + RADIUS);
   screen.width = WIDTH;
   screen.height = HEIGHT;
   screenContext = screen.getContext('2d');
