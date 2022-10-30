@@ -1,5 +1,6 @@
 let screenContext = null;
 let ARROW_JUMP = 1000;
+let START_Z = 100000;
 let particles = [];
 const t = 1;
 const G = 21.54;
@@ -196,53 +197,67 @@ function startSimulation() {
 
 function createSolarSystem() {
   particles.push(
-    new Particle(0, 'sun', 2000000, 560, new Vector(0, 0, 750000), new Vector(0, 0, 0))
-  ); //sun x2
+    new Particle(0, 'sun', 2000000, 278.536, new Vector(0, 0, START_Z), new Vector(0, 0, 0))
+  ); //sun
   particles.push(
-    new Particle(1, 'mercury', 0.33, 5, new Vector(0, 23200, 750000), new Vector(48, 0, 0))
-  ); //mercury x5
+    new Particle(1, 'mercury', 0.33, 0.976, new Vector(0, 23200, START_Z), new Vector(48, 0, 0))
+  ); //mercury
   particles.push(
-    new Particle(2, 'mars', 0.64, 7.5, new Vector(0, 88400, 750000), new Vector(24, 0, 0))
-  ); //mars x5
+    new Particle(2, 'mars', 0.64, 1.3558, new Vector(0, 88400, START_Z), new Vector(24, 0, 0))
+  ); //mars
   particles.push(
-    new Particle(3, 'venus', 4.8, 11.5, new Vector(0, 43200, 750000), new Vector(35, 0, 0))
-  ); //venus x5
+    new Particle(3, 'venus', 4.8, 2.4208, new Vector(0, 43200, START_Z), new Vector(35, 0, 0))
+  ); //venus
   particles.push(
-    new Particle(4, 'earth', 6, 12.5, new Vector(0, 60000, 750000), new Vector(30, 0, 0))
-  ); //earth x5
+    new Particle(4, 'earth', 6, 2.5484, new Vector(0, 60000, START_Z), new Vector(30, 0, 0))
+  ); //earth
   particles.push(
-    new Particle(5, 'moon', 0.073, 3.45, new Vector(0, 59846, 750000), new Vector(31, 0, 0))
-  ); //moon x5
+    new Particle(5, 'moon', 0.073, 0.6949, new Vector(0, 59846, START_Z), new Vector(31, 0, 0))
+  ); //moon
   particles.push(
-    new Particle(6, 'jupiter', 1898, 56, new Vector(0, 300000, 750000), new Vector(13.1, 0, 0))
-  ); //jupiter x2
+    new Particle(
+      6,
+      'jupiter',
+      1898,
+      27.9644,
+      new Vector(0, 300000, START_Z),
+      new Vector(13.1, 0, 0)
+    )
+  ); //jupiter
   particles.push(
-    new Particle(7, 'io', 0.089, 4, new Vector(0, 299831, 750000), new Vector(31.03, 0, 0))
-  ); //io x5
+    new Particle(7, 'io', 0.7288, 4, new Vector(0, 299831, START_Z), new Vector(31.03, 0, 0))
+  ); //io
   particles.push(
-    new Particle(8, 'europa', 0.048, 3.1, new Vector(0, 299732, 750000), new Vector(27.52, 0, 0))
-  ); //europa x5
+    new Particle(8, 'europa', 0.6244, 3.1, new Vector(0, 299732, START_Z), new Vector(27.52, 0, 0))
+  ); //europa
   particles.push(
-    new Particle(9, 'ganymede', 0.148, 5.25, new Vector(0, 299572, 750000), new Vector(24.58, 0, 0))
-  ); //ganymede x5
+    new Particle(
+      9,
+      'ganymede',
+      1.0536,
+      5.25,
+      new Vector(0, 299572, START_Z),
+      new Vector(24.58, 0, 0)
+    )
+  ); //ganymede
   particles.push(
-    new Particle(10, 'callisto', 0.107, 4.8, new Vector(0, 299248, 750000), new Vector(21.9, 0, 0))
-  ); //callisto x5
+    new Particle(10, 'callisto', 0.964, 4.8, new Vector(0, 299248, START_Z), new Vector(21.9, 0, 0))
+  ); //callisto
   particles.push(
-    new Particle(11, 'saturn', 568, 46.5, new Vector(0, 600000, 750000), new Vector(9.68, 0, 0))
-  ); //saturn x2
+    new Particle(11, 'saturn', 568, 23.2928, new Vector(0, 600000, START_Z), new Vector(9.68, 0, 0))
+  ); //saturn
   particles.push(
-    new Particle(12, 'titan', 0.134, 5, new Vector(0, 599520, 750000), new Vector(12.25, 0, 0))
-  ); //titan x5
+    new Particle(12, 'titan', 1.03, 5, new Vector(0, 599520, START_Z), new Vector(12.25, 0, 0))
+  ); //titan
   particles.push(
-    new Particle(13, 'uranus', 86.8, 30, new Vector(0, 1200000, 750000), new Vector(6.8, 0, 0))
-  ); //uranus x3
+    new Particle(13, 'uranus', 10.1448, 30, new Vector(0, 1200000, START_Z), new Vector(6.8, 0, 0))
+  ); //uranus
   particles.push(
-    new Particle(14, 'neptune', 102.4, 30, new Vector(0, 1800000, 750000), new Vector(5.43, 0, 0))
-  ); //neptune x3
+    new Particle(14, 'neptune', 9.8488, 30, new Vector(0, 1800000, START_Z), new Vector(5.43, 0, 0))
+  ); //neptune
   particles.push(
-    new Particle(15, 'triton', 0.02, 2.7, new Vector(0, 1799858, 750000), new Vector(9.82, 0, 0))
-  ); //triton x5
+    new Particle(15, 'triton', 0.5412, 2.7, new Vector(0, 1799858, START_Z), new Vector(9.82, 0, 0))
+  ); //triton
 }
 
 function setupScreen() {
