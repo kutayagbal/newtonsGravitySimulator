@@ -1,4 +1,5 @@
 let screenContext = null;
+let ARROW_JUMP = 1000;
 let particles = [];
 const t = 1;
 const G = 21.54;
@@ -36,18 +37,25 @@ const colors = [
 //----------//----------//----------//----------//----------//----------
 
 document.addEventListener('keyup', e => {
+  let jumpAmount = ARROW_JUMP;
+  if (e.shiftKey) {
+    jumpAmount *= 10;
+  } else if (e.ctrlKey) {
+    jumpAmount *= 100;
+  }
+
   if (e.code === 'ArrowUp') {
-    particles.forEach(p => (p.nextLocation.y -= 10000));
+    particles.forEach(p => (p.nextLocation.y -= jumpAmount));
   } else if (e.code === 'ArrowDown') {
-    particles.forEach(p => (p.nextLocation.y += 10000));
+    particles.forEach(p => (p.nextLocation.y += jumpAmount));
   } else if (e.code === 'ArrowLeft') {
-    particles.forEach(p => (p.nextLocation.x += 10000));
+    particles.forEach(p => (p.nextLocation.x += jumpAmount));
   } else if (e.code === 'ArrowRight') {
-    particles.forEach(p => (p.nextLocation.x -= 10000));
+    particles.forEach(p => (p.nextLocation.x -= jumpAmount));
   } else if (e.code === 'KeyA') {
-    particles.forEach(p => (p.nextLocation.z -= 50000));
+    particles.forEach(p => (p.nextLocation.z -= jumpAmount));
   } else if (e.code === 'KeyS') {
-    particles.forEach(p => (p.nextLocation.z += 50000));
+    particles.forEach(p => (p.nextLocation.z += jumpAmount));
   }
 });
 class Vector {
@@ -59,8 +67,9 @@ class Vector {
 }
 
 class Particle {
-  constructor(id, mass, radius, location, velocity) {
+  constructor(id, title, mass, radius, location, velocity) {
     this.id = id;
+    this.title = title;
     this.mass = mass;
     this.radius = radius;
     this.location = location;
@@ -180,85 +189,59 @@ class Particle {
 //----------//----------//----------//----------//----------//----------
 
 function startSimulation() {
-  // createParticles();
   createSolarSystem();
   setupScreen();
   setTimeout(simulate, SIMULATION_INTERVAL * 1000);
 }
 
-function createParticles() {
-  particles.push(
-    new Particle(0, 8, 50, new Vector(-1600, -600, 20000), new Vector(-0.3, 0.1, 5.4))
-  );
-  particles.push(new Particle(1, 0.05, 18, new Vector(-1700, -600, 19900), new Vector(0, 0, 30)));
-  particles.push(new Particle(2, 0.05, 18, new Vector(-1700, -500, 19900), new Vector(0, 0, 27)));
-
-  particles.push(new Particle(3, 7, 40, new Vector(0, -600, 20000), new Vector(0, 0.1, -5)));
-  particles.push(new Particle(4, 0.04, 12, new Vector(0, -500, 20100), new Vector(0, 0, -30)));
-  particles.push(new Particle(5, 0.04, 12, new Vector(50, -700, 20000), new Vector(0, 0, -30)));
-  // //
-  particles.push(
-    new Particle(6, 8, 40, new Vector(-1000, 1200, 35000), new Vector(0.2, -0.1, 5.1))
-  );
-  particles.push(new Particle(7, 0.04, 14, new Vector(-1100, 1200, 34900), new Vector(0, 0, 30)));
-  particles.push(new Particle(8, 0.04, 14, new Vector(-1100, 1400, 34900), new Vector(0, 0, 27)));
-
-  particles.push(new Particle(9, 7, 35, new Vector(400, 700, 35000), new Vector(0.4, -0.1, -4.58)));
-  particles.push(new Particle(10, 0.04, 10, new Vector(400, 800, 35100), new Vector(0, 0, -30)));
-  particles.push(new Particle(11, 0.04, 10, new Vector(450, 600, 35000), new Vector(0, 0, -30)));
-  // //
-  particles.push(
-    new Particle(6, 8, 40, new Vector(-6000, 1000, 51000), new Vector(0.5, -0.1, 6.9))
-  );
-  particles.push(new Particle(7, 0.04, 14, new Vector(-6100, 1000, 50900), new Vector(0, 0, 30)));
-  particles.push(new Particle(8, 0.04, 14, new Vector(-6100, 1100, 50900), new Vector(0, 0, 27)));
-
-  particles.push(new Particle(9, 7, 35, new Vector(-4600, 1000, 51000), new Vector(0.9, -0.1, -4)));
-  particles.push(new Particle(10, 0.04, 10, new Vector(-4600, 1100, 51100), new Vector(0, 0, -30)));
-  particles.push(new Particle(11, 0.04, 10, new Vector(-4550, 900, 51000), new Vector(0, 0, -30)));
-  //
-
-  particles.push(new Particle(12, 8, 50, new Vector(4000, 2000, 69000), new Vector(0.5, -0.5, 4)));
-  particles.push(new Particle(13, 0.04, 24, new Vector(4100, 2000, 68900), new Vector(0, 0, 30)));
-  particles.push(new Particle(14, 0.04, 24, new Vector(4100, 1900, 68900), new Vector(0, 0, 27)));
-
-  particles.push(
-    new Particle(15, 7, 45, new Vector(4000, 700, 69000), new Vector(0.2, -0.9, -6.1))
-  );
-  particles.push(new Particle(16, 0.04, 20, new Vector(3900, 700, 69100), new Vector(0, 0, -30)));
-  particles.push(new Particle(17, 0.04, 20, new Vector(4100, 600, 69000), new Vector(0, 0, -30)));
-}
-
 function createSolarSystem() {
-  particles.push(new Particle(0, 2000000, 560, new Vector(0, 0, 750000), new Vector(0, 0, 0))); //sun x2
-  particles.push(new Particle(1, 0.33, 5, new Vector(0, 23200, 750000), new Vector(48, 0, 0))); //mercury x5
-  particles.push(new Particle(2, 0.64, 7.5, new Vector(0, 88400, 750000), new Vector(24, 0, 0))); //mars x5
-  particles.push(new Particle(3, 4.8, 11.5, new Vector(0, 43200, 750000), new Vector(35, 0, 0))); //venus x5
-  particles.push(new Particle(4, 6, 12.5, new Vector(0, 60000, 750000), new Vector(30, 0, 0))); //earth x5
-  particles.push(new Particle(5, 0.073, 3.45, new Vector(0, 59846, 750000), new Vector(31, 0, 0))); //moon x5
-  particles.push(new Particle(6, 1898, 56, new Vector(0, 300000, 750000), new Vector(13.1, 0, 0))); //jupiter x2
-  particles.push(new Particle(7, 0.089, 4, new Vector(0, 299831, 750000), new Vector(31.03, 0, 0))); //io x5
   particles.push(
-    new Particle(8, 0.048, 3.1, new Vector(0, 299732, 750000), new Vector(27.52, 0, 0))
+    new Particle(0, 'sun', 2000000, 560, new Vector(0, 0, 750000), new Vector(0, 0, 0))
+  ); //sun x2
+  particles.push(
+    new Particle(1, 'mercury', 0.33, 5, new Vector(0, 23200, 750000), new Vector(48, 0, 0))
+  ); //mercury x5
+  particles.push(
+    new Particle(2, 'mars', 0.64, 7.5, new Vector(0, 88400, 750000), new Vector(24, 0, 0))
+  ); //mars x5
+  particles.push(
+    new Particle(3, 'venus', 4.8, 11.5, new Vector(0, 43200, 750000), new Vector(35, 0, 0))
+  ); //venus x5
+  particles.push(
+    new Particle(4, 'earth', 6, 12.5, new Vector(0, 60000, 750000), new Vector(30, 0, 0))
+  ); //earth x5
+  particles.push(
+    new Particle(5, 'moon', 0.073, 3.45, new Vector(0, 59846, 750000), new Vector(31, 0, 0))
+  ); //moon x5
+  particles.push(
+    new Particle(6, 'jupiter', 1898, 56, new Vector(0, 300000, 750000), new Vector(13.1, 0, 0))
+  ); //jupiter x2
+  particles.push(
+    new Particle(7, 'io', 0.089, 4, new Vector(0, 299831, 750000), new Vector(31.03, 0, 0))
+  ); //io x5
+  particles.push(
+    new Particle(8, 'europa', 0.048, 3.1, new Vector(0, 299732, 750000), new Vector(27.52, 0, 0))
   ); //europa x5
   particles.push(
-    new Particle(9, 0.148, 5.25, new Vector(0, 299572, 750000), new Vector(24.58, 0, 0))
+    new Particle(9, 'ganymede', 0.148, 5.25, new Vector(0, 299572, 750000), new Vector(24.58, 0, 0))
   ); //ganymede x5
   particles.push(
-    new Particle(10, 0.107, 4.8, new Vector(0, 299248, 750000), new Vector(21.9, 0, 0))
+    new Particle(10, 'callisto', 0.107, 4.8, new Vector(0, 299248, 750000), new Vector(21.9, 0, 0))
   ); //callisto x5
   particles.push(
-    new Particle(11, 568, 46.5, new Vector(0, 600000, 750000), new Vector(9.68, 0, 0))
+    new Particle(11, 'saturn', 568, 46.5, new Vector(0, 600000, 750000), new Vector(9.68, 0, 0))
   ); //saturn x2
   particles.push(
-    new Particle(12, 0.134, 5, new Vector(0, 599520, 750000), new Vector(12.25, 0, 0))
+    new Particle(12, 'titan', 0.134, 5, new Vector(0, 599520, 750000), new Vector(12.25, 0, 0))
   ); //titan x5
-  particles.push(new Particle(13, 86.8, 30, new Vector(0, 1200000, 750000), new Vector(6.8, 0, 0))); //uranus x3
   particles.push(
-    new Particle(14, 102.4, 30, new Vector(0, 1800000, 750000), new Vector(5.43, 0, 0))
+    new Particle(13, 'uranus', 86.8, 30, new Vector(0, 1200000, 750000), new Vector(6.8, 0, 0))
+  ); //uranus x3
+  particles.push(
+    new Particle(14, 'neptune', 102.4, 30, new Vector(0, 1800000, 750000), new Vector(5.43, 0, 0))
   ); //neptune x3
   particles.push(
-    new Particle(15, 0.02, 2.7, new Vector(0, 1799858, 750000), new Vector(9.82, 0, 0))
+    new Particle(15, 'triton', 0.02, 2.7, new Vector(0, 1799858, 750000), new Vector(9.82, 0, 0))
   ); //triton x5
 }
 
@@ -289,7 +272,22 @@ function projectParticles() {
 
   particles.sort(Particle.compareByZLocation).forEach(particle => {
     particle.moveToNextLocation(particle.project());
+    showParticleLocationInfo(particle);
   });
+}
+
+function showParticleLocationInfo(particle) {
+  screenContext.fillText(
+    particle.title +
+      ': ' +
+      (particle.location.x / ARROW_JUMP).toFixed(1) +
+      ', ' +
+      (particle.location.y / ARROW_JUMP).toFixed(1) +
+      ', ' +
+      (particle.location.z / ARROW_JUMP).toFixed(1),
+    10,
+    15 * particle.id + 15
+  );
 }
 
 function calculateNextLocationsAndVelocities() {
