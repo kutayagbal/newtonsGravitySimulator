@@ -7,7 +7,7 @@ Velocities are km/sec.
 Use below keys to move camera in space:
 ArrowUp: North (+Y)
 ArrowDown: South (-Y)
-ArrowRight: East (X)
+ArrowRight: East (+X)
 ArrowLeft: West (-X)
 A: Forward (+Z)
 S: Backward (-Z)
