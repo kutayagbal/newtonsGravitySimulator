@@ -199,22 +199,22 @@ function startSimulation() {
 
 function createSolarSystem() {
   particles.push(
-    new Particle(0, 'sun', 2000000, 278.536, new Vector(0, 0, START_Z), new Vector(0, 0, 0))
+    new Particle(0, 'sun', 1989000, 278.536, new Vector(0, 0, START_Z), new Vector(0, 0, 0))
   ); //sun
   particles.push(
-    new Particle(1, 'mercury', 0.33, 0.976, new Vector(0, 23200, START_Z), new Vector(48, 0, 0))
+    new Particle(1, 'mercury', 0.3285, 0.976, new Vector(0, 23200, START_Z), new Vector(48, 0, 0))
   ); //mercury
   particles.push(
-    new Particle(2, 'mars', 0.64, 1.3558, new Vector(0, 88400, START_Z), new Vector(24, 0, 0))
+    new Particle(2, 'mars', 0.639, 1.3558, new Vector(0, 88400, START_Z), new Vector(24, 0, 0))
   ); //mars
   particles.push(
-    new Particle(3, 'venus', 4.8, 2.4208, new Vector(0, 43200, START_Z), new Vector(35, 0, 0))
+    new Particle(3, 'venus', 4.867, 2.4208, new Vector(0, 43200, START_Z), new Vector(35, 0, 0))
   ); //venus
   particles.push(
-    new Particle(4, 'earth', 6, 2.5484, new Vector(0, 60000, START_Z), new Vector(30, 0, 0))
+    new Particle(4, 'earth', 5.972, 2.5484, new Vector(0, 60000, START_Z), new Vector(30, 0, 0))
   ); //earth
   particles.push(
-    new Particle(5, 'moon', 0.073, 0.6949, new Vector(0, 59846, START_Z), new Vector(31, 0, 0))
+    new Particle(5, 'moon', 0.0734, 0.6949, new Vector(0, 59846, START_Z), new Vector(31, 0, 0))
   ); //moon
   particles.push(
     new Particle(
@@ -227,7 +227,7 @@ function createSolarSystem() {
     )
   ); //jupiter
   particles.push(
-    new Particle(7, 'io', 0.089, 0.7288, new Vector(0, 299831, START_Z), new Vector(31.03, 0, 0))
+    new Particle(7, 'io', 0.0893, 0.7288, new Vector(0, 299831, START_Z), new Vector(31.03, 0, 0))
   ); //io
   particles.push(
     new Particle(
@@ -243,7 +243,7 @@ function createSolarSystem() {
     new Particle(
       9,
       'ganymede',
-      0.148,
+      0.1481,
       1.0536,
       new Vector(0, 299572, START_Z),
       new Vector(24.58, 0, 0)
@@ -253,23 +253,30 @@ function createSolarSystem() {
     new Particle(
       10,
       'callisto',
-      0.107,
+      0.1075,
       0.964,
       new Vector(0, 299248, START_Z),
       new Vector(21.9, 0, 0)
     )
   ); //callisto
   particles.push(
-    new Particle(11, 'saturn', 568, 23.2928, new Vector(0, 600000, START_Z), new Vector(9.68, 0, 0))
+    new Particle(
+      11,
+      'saturn',
+      568.3,
+      23.2928,
+      new Vector(0, 600000, START_Z),
+      new Vector(9.68, 0, 0)
+    )
   ); //saturn
   particles.push(
-    new Particle(12, 'titan', 0.134, 1.03, new Vector(0, 599520, START_Z), new Vector(12.25, 0, 0))
+    new Particle(12, 'titan', 0.1345, 1.03, new Vector(0, 599520, START_Z), new Vector(12.25, 0, 0))
   ); //titan
   particles.push(
     new Particle(
       13,
       'uranus',
-      86.8,
+      86.81,
       10.1448,
       new Vector(0, 1200000, START_Z),
       new Vector(6.8, 0, 0)
@@ -289,7 +296,7 @@ function createSolarSystem() {
     new Particle(
       15,
       'triton',
-      0.02,
+      0.0213,
       0.5412,
       new Vector(0, 1799858, START_Z),
       new Vector(9.82, 0, 0)
