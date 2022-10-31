@@ -208,7 +208,7 @@ function createSolarSystem() {
     new Particle(2, 'mars', 0.639, 1.3558, new Vector(0, 88400, START_Z), new Vector(24, 0, 0))
   ); //mars
   particles.push(
-    new Particle(3, 'venus', 4.867, 2.4208, new Vector(0, 43200, START_Z), new Vector(35, 0, 0))
+    new Particle(3, 'venus', 4.867, 2.4208, new Vector(0, 43200, START_Z), new Vector(-35, 0, 0))
   ); //venus
   particles.push(
     new Particle(4, 'earth', 5.972, 2.5484, new Vector(0, 60000, START_Z), new Vector(30, 0, 0))
@@ -279,7 +279,7 @@ function createSolarSystem() {
       86.81,
       10.1448,
       new Vector(0, 1200000, START_Z),
-      new Vector(6.8, 0, 0)
+      new Vector(-6.8, 0, 0)
     )
   ); //uranus
   particles.push(
@@ -298,8 +298,8 @@ function createSolarSystem() {
       'triton',
       0.0213,
       0.5412,
-      new Vector(0, 1799858, START_Z),
-      new Vector(9.82, 0, 0)
+      new Vector(0, 1800142, START_Z),
+      new Vector(1.04, 0, 0)
     )
   ); //triton
 }
