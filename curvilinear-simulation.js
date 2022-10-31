@@ -1,5 +1,5 @@
 let screenContext = null;
-let ARROW_JUMP = 500;
+let ARROW_JUMP = 100;
 let START_Z = 100000;
 let particles = [];
 const t = 1;
@@ -8,14 +8,14 @@ let WIDTH = 0;
 let HEIGHT = 0;
 let RADIUS = 0;
 let LAST_LOCATION_LIST_SIZE = 0;
-let SIMULATION_INTERVAL = 0.05;
+let SIMULATION_INTERVAL = 0.1;
 let isSimulationSpeedUp = true;
 const colors = [
   'gold',
   'white',
   'crimson',
   'peru',
-  'blue',
+  'SkyBlue',
   'grey',
   'lightpink',
   'yellowgreen',
@@ -43,6 +43,8 @@ document.addEventListener('keyup', e => {
     jumpAmount *= 10;
   } else if (e.ctrlKey) {
     jumpAmount *= 100;
+  } else if (e.altKey) {
+    jumpAmount *= 1000;
   }
 
   if (e.code === 'ArrowUp') {
