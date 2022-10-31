@@ -1,4 +1,5 @@
 let screenContext = null;
+let cameraLocation = null;
 let ARROW_JUMP = 100;
 let START_Z = 100000;
 let particles = [];
@@ -48,17 +49,17 @@ document.addEventListener('keyup', e => {
   }
 
   if (e.code === 'ArrowUp') {
-    particles.forEach(p => (p.nextLocation.y -= jumpAmount));
+    cameraLocation.y += jumpAmount;
   } else if (e.code === 'ArrowDown') {
-    particles.forEach(p => (p.nextLocation.y += jumpAmount));
+    cameraLocation.y -= jumpAmount;
   } else if (e.code === 'ArrowLeft') {
-    particles.forEach(p => (p.nextLocation.x += jumpAmount));
+    cameraLocation.x -= jumpAmount;
   } else if (e.code === 'ArrowRight') {
-    particles.forEach(p => (p.nextLocation.x -= jumpAmount));
+    cameraLocation.x += jumpAmount;
   } else if (e.code === 'KeyA') {
-    particles.forEach(p => (p.nextLocation.z -= jumpAmount));
+    cameraLocation.z += jumpAmount;
   } else if (e.code === 'KeyS') {
-    particles.forEach(p => (p.nextLocation.z += jumpAmount));
+    cameraLocation.z -= jumpAmount;
   }
 });
 class Vector {
@@ -89,27 +90,27 @@ class Particle {
 
     var centerPathX = 0;
     var centerPathY = 0;
-    let centerX = parseInt(this.nextLocation.x);
-    let centerY = parseInt(this.nextLocation.y);
-    let centralDistanceToOrigin = Math.sqrt(
-      Math.pow(this.nextLocation.x, 2) +
-        Math.pow(this.nextLocation.y, 2) +
-        Math.pow(this.nextLocation.z, 2)
+    let centerX = parseInt(this.nextLocation.x - cameraLocation.x);
+    let centerY = parseInt(this.nextLocation.y - cameraLocation.y);
+    let centralDistanceToCamera = Math.sqrt(
+      Math.pow(centerX, 2) +
+        Math.pow(centerY, 2) +
+        Math.pow(this.nextLocation.z - cameraLocation.z, 2)
     );
-    centerPathX = (RADIUS * centerX) / centralDistanceToOrigin;
-    centerPathY = (RADIUS * centerY) / centralDistanceToOrigin;
+    centerPathX = (RADIUS * centerX) / centralDistanceToCamera;
+    centerPathY = (RADIUS * centerY) / centralDistanceToCamera;
 
     var surfacePathX = 0;
     var surfacePathY = 0;
-    let surfaceX = parseInt(this.nextLocation.x) + this.radius;
-    let surfaceY = parseInt(this.nextLocation.y);
-    let surfaceDistanceToOrigin = Math.sqrt(
-      Math.pow(this.nextLocation.x + this.radius, 2) +
-        Math.pow(this.nextLocation.y, 2) +
-        Math.pow(this.nextLocation.z, 2)
+    let surfaceX = parseInt(this.nextLocation.x - cameraLocation.x) + this.radius;
+    let surfaceY = parseInt(this.nextLocation.y - cameraLocation.y);
+    let surfaceDistanceToCamera = Math.sqrt(
+      Math.pow(surfaceX, 2) +
+        Math.pow(surfaceY, 2) +
+        Math.pow(this.nextLocation.z - cameraLocation.z, 2)
     );
-    surfacePathX = (RADIUS * surfaceX) / surfaceDistanceToOrigin;
-    surfacePathY = (RADIUS * surfaceY) / surfaceDistanceToOrigin;
+    surfacePathX = (RADIUS * surfaceX) / surfaceDistanceToCamera;
+    surfacePathY = (RADIUS * surfaceY) / surfaceDistanceToCamera;
 
     let screenRadius = Math.sqrt(
       Math.pow(surfacePathX - centerPathX, 2) + Math.pow(surfacePathY - centerPathY, 2)
@@ -312,6 +313,7 @@ function setupScreen() {
   screen.width = WIDTH;
   screen.height = HEIGHT;
   screenContext = screen.getContext('2d');
+  cameraLocation = new Vector(0, 0, 0);
   clearScreen();
 }
 
@@ -329,6 +331,8 @@ function simulate() {
 function projectParticles() {
   clearScreen();
 
+  showCameraLocationInfo();
+
   particles.sort(Particle.compareByZLocation).forEach(particle => {
     particle.moveToNextLocation(particle.project());
     showParticleLocationInfo(particle);
@@ -339,13 +343,27 @@ function showParticleLocationInfo(particle) {
   screenContext.fillText(
     particle.title +
       ': ' +
-      (particle.location.x / ARROW_JUMP).toFixed(1) +
+      ((particle.location.x - cameraLocation.x) / ARROW_JUMP).toFixed(1) +
       ', ' +
-      (particle.location.y / ARROW_JUMP).toFixed(1) +
+      ((particle.location.y - cameraLocation.y) / ARROW_JUMP).toFixed(1) +
       ', ' +
-      (particle.location.z / ARROW_JUMP).toFixed(1),
+      ((particle.location.z - cameraLocation.z) / ARROW_JUMP).toFixed(1),
     10,
-    15 * particle.id + 15
+    15 * particle.id + 30
+  );
+}
+
+function showCameraLocationInfo() {
+  screenContext.fillStyle = 'green';
+  screenContext.fillText(
+    'camera: ' +
+      (cameraLocation.x / ARROW_JUMP).toFixed(1) +
+      ', ' +
+      (cameraLocation.y / ARROW_JUMP).toFixed(1) +
+      ', ' +
+      (cameraLocation.z / ARROW_JUMP).toFixed(1),
+    10,
+    15
   );
 }
 
