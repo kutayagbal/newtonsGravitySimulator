@@ -8,13 +8,12 @@ const G = 21.54;
 let WIDTH = 0;
 let HEIGHT = 0;
 let RADIUS = 0;
-let LAST_LOCATION_LIST_SIZE = 0;
-let SIMULATION_INTERVAL = 0.1;
+let SIMULATION_INTERVAL = 0.01;
 const colors = [
-  'gold',
+  'darkblue',
+  'darkslategrey',
+  'darkmagenta',
   'white',
-  'crimson',
-  'peru',
   'SkyBlue',
   'grey',
   'lightpink',
@@ -79,14 +78,9 @@ class Particle {
     this.velocity = velocity;
     this.nextLocation = location;
     this.nextVelocity = velocity;
-    this.lastLocations = [];
   }
 
   project() {
-    if (LAST_LOCATION_LIST_SIZE > 0) {
-      this.projectLastLocations();
-    }
-
     var centerPathX = 0;
     var centerPathY = 0;
     let centerX = parseInt(this.nextLocation.x - cameraLocation.x);
@@ -115,7 +109,8 @@ class Particle {
       Math.pow(surfacePathX - centerPathX, 2) + Math.pow(surfacePathY - centerPathY, 2)
     );
 
-    if (screenRadius > 0) {
+    screenContext.fillStyle = this.getColor();
+    if (screenRadius > 0 && cameraLocation.z < this.nextLocation.z) {
       screenContext.beginPath();
       screenContext.globalAlpha = 1;
       screenContext.arc(
@@ -126,29 +121,9 @@ class Particle {
         Math.PI * 2
       );
       screenContext.closePath();
-      screenContext.fillStyle = this.getColor();
       screenContext.fill();
     }
     return { centerPathX, centerPathY, screenRadius };
-  }
-
-  projectLastLocations() {
-    this.lastLocations.forEach(loc => {
-      if (loc.screenRadius > 0) {
-        screenContext.beginPath();
-        screenContext.globalAlpha = 1;
-        screenContext.arc(
-          WIDTH / 2 + loc.centerPathX,
-          HEIGHT / 2 - loc.centerPathY,
-          loc.screenRadius,
-          0,
-          Math.PI * 2
-        );
-        screenContext.closePath();
-        screenContext.fillStyle = this.getColor();
-        screenContext.fill();
-      }
-    });
   }
 
   getColor() {
@@ -156,26 +131,8 @@ class Particle {
   }
 
   moveToNextLocation(obj) {
-    if (LAST_LOCATION_LIST_SIZE > 0) {
-      this.moveLastLocations(obj.centerPathX, obj.centerPathY, obj.screenRadius);
-    }
-
     this.location = { ...this.nextLocation };
     this.velocity = { ...this.nextVelocity };
-  }
-
-  moveLastLocations(centerPathX, centerPathY, screenRadius) {
-    if (LAST_LOCATION_LIST_SIZE > 0) {
-      if (this.lastLocations.length == LAST_LOCATION_LIST_SIZE) {
-        this.lastLocations.pop();
-      }
-
-      this.lastLocations.unshift({
-        centerPathX: centerPathX,
-        centerPathY: centerPathY,
-        screenRadius: screenRadius,
-      });
-    }
   }
 
   static compareByZLocation(a, b) {
@@ -192,165 +149,40 @@ class Particle {
 //----------//----------//----------//----------//----------//----------
 
 function startSimulation() {
-  createSolarSystem();
+  createSystem();
   setupScreen();
   setTimeout(simulate, SIMULATION_INTERVAL * 1000);
 }
 
-function createSolarSystem() {
+function createSystem() {
+  m0 = 500000;
+  r0 = 1000;
+  particles.push(new Particle(0, 'O0', m0, r0, new Vector(0, 0, START_Z), new Vector(0, 0, 0)));
+
+  m1 = 20000;
+  r1 = 300;
+  d1 = 20000;
+  v1 = Math.sqrt((G * m0) / d1) + 1;
+  console.log(v1);
+  particles.push(new Particle(1, 'O1', m1, r1, new Vector(-d1, 0, START_Z), new Vector(0, 0, v1)));
+
+  m2 = 4000;
+  r2 = 40;
+  d2 = 1000;
+  v2 = Math.sqrt((G * m1) / d2) + 1;
+  console.log(v2);
   particles.push(
-    new Particle(0, 'sun', 1989000, 278.536, new Vector(0, 0, START_Z), new Vector(0, 0, 0))
-  ); //sun
+    new Particle(2, 'O2', m2, r2, new Vector(-d1, d2, START_Z), new Vector(0, 0, v1 + v2))
+  );
+
+  m3 = 100;
+  r3 = 10;
+  d3 = 100;
+  v3 = Math.sqrt((G * m2) / d3) + 1;
+  console.log(v3);
   particles.push(
-    new Particle(
-      1,
-      'mercury',
-      0.3285,
-      0.976,
-      new Vector(0, 23200 / Math.sqrt(2), START_Z + 23200 / Math.sqrt(2)),
-      new Vector(48, 0, 0)
-    )
-  ); //mercury
-  particles.push(
-    new Particle(
-      2,
-      'mars',
-      0.639,
-      1.3558,
-      new Vector(0, 88400 / Math.sqrt(2), START_Z + 88400 / Math.sqrt(2)),
-      new Vector(24, 0, 0)
-    )
-  ); //mars
-  particles.push(
-    new Particle(
-      3,
-      'venus',
-      4.867,
-      2.4208,
-      new Vector(0, 43200 / Math.sqrt(2), START_Z + 43200 / Math.sqrt(2)),
-      new Vector(-35, 0, 0)
-    )
-  ); //venus
-  particles.push(
-    new Particle(
-      4,
-      'earth',
-      5.972,
-      2.5484,
-      new Vector(0, 60000 / Math.sqrt(2), START_Z + 60000 / Math.sqrt(2)),
-      new Vector(30, 0, 0)
-    )
-  ); //earth
-  particles.push(
-    new Particle(
-      5,
-      'moon',
-      0.0734,
-      0.6949,
-      new Vector(0, 60154 / Math.sqrt(2), START_Z + 60154 / Math.sqrt(2)),
-      new Vector(31, 0, 0)
-    )
-  ); //moon
-  particles.push(
-    new Particle(
-      6,
-      'jupiter',
-      1898,
-      27.9644,
-      new Vector(0, 300000 / Math.sqrt(2), START_Z + 300000 / Math.sqrt(2)),
-      new Vector(13.1, 0, 0)
-    )
-  ); //jupiter
-  particles.push(
-    new Particle(
-      7,
-      'io',
-      0.0893,
-      0.7288,
-      new Vector(0, 300169 / Math.sqrt(2), START_Z + 300169 / Math.sqrt(2)),
-      new Vector(31.03, 0, 0)
-    )
-  ); //io
-  particles.push(
-    new Particle(
-      8,
-      'europa',
-      0.048,
-      0.6244,
-      new Vector(0, 300268 / Math.sqrt(2), START_Z + 300268 / Math.sqrt(2)),
-      new Vector(27.52, 0, 0)
-    )
-  ); //europa
-  particles.push(
-    new Particle(
-      9,
-      'ganymede',
-      0.1481,
-      1.0536,
-      new Vector(0, 300428 / Math.sqrt(2), START_Z + 300428 / Math.sqrt(2)),
-      new Vector(24.58, 0, 0)
-    )
-  ); //ganymede
-  particles.push(
-    new Particle(
-      10,
-      'callisto',
-      0.1075,
-      0.964,
-      new Vector(0, 300752 / Math.sqrt(2), START_Z + 300752 / Math.sqrt(2)),
-      new Vector(21.9, 0, 0)
-    )
-  ); //callisto
-  particles.push(
-    new Particle(
-      11,
-      'saturn',
-      568.3,
-      23.2928,
-      new Vector(0, 600000 / Math.sqrt(2), START_Z + 600000 / Math.sqrt(2)),
-      new Vector(9.68, 0, 0)
-    )
-  ); //saturn
-  particles.push(
-    new Particle(
-      12,
-      'titan',
-      0.1345,
-      1.03,
-      new Vector(0, 600480 / Math.sqrt(2), START_Z + 600480 / Math.sqrt(2)),
-      new Vector(12.25, 0, 0)
-    )
-  ); //titan
-  particles.push(
-    new Particle(
-      13,
-      'uranus',
-      86.81,
-      10.1448,
-      new Vector(0, 1200000 / Math.sqrt(2), START_Z + 1200000 / Math.sqrt(2)),
-      new Vector(-6.8, 0, 0)
-    )
-  ); //uranus
-  particles.push(
-    new Particle(
-      14,
-      'neptune',
-      102.4,
-      9.8488,
-      new Vector(0, 1800000 / Math.sqrt(2), START_Z + 1800000 / Math.sqrt(2)),
-      new Vector(5.43, 0, 0)
-    )
-  ); //neptune
-  particles.push(
-    new Particle(
-      15,
-      'triton',
-      0.0213,
-      0.5412,
-      new Vector(0, 1800142 / Math.sqrt(2), START_Z + 1800142 / Math.sqrt(2)),
-      new Vector(1.04, 0, 0)
-    )
-  ); //triton
+    new Particle(3, 'O3', m3, r3, new Vector(-d1 + d3, d2, START_Z), new Vector(0, 0, v1 + v2 + v3))
+  );
 }
 
 function setupScreen() {
