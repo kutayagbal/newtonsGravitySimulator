@@ -8,13 +8,14 @@ const G = 21.54;
 let WIDTH = 0;
 let HEIGHT = 0;
 let RADIUS = 0;
-let SIMULATION_INTERVAL = 0.01;
+let SIMULATION_INTERVAL = 0.001;
+const million = 1000000;
 const colors = [
-  'darkblue',
-  'darkslategrey',
+  'peru',
   'darkmagenta',
-  'white',
-  'SkyBlue',
+  'dodgerblue',
+  'yellowgreen',
+  'crimson',
   'grey',
   'lightpink',
   'yellowgreen',
@@ -59,6 +60,7 @@ document.addEventListener('keyup', e => {
   } else if (e.code === 'KeyS') {
     cameraLocation.z -= jumpAmount;
   }
+  clearScreen();
 });
 class Vector {
   constructor(x, y, z) {
@@ -155,33 +157,67 @@ function startSimulation() {
 }
 
 function createSystem() {
-  m0 = 500000;
-  r0 = 1000;
-  particles.push(new Particle(0, 'O0', m0, r0, new Vector(0, 0, START_Z), new Vector(0, 0, 0)));
-
-  m1 = 20000;
-  r1 = 300;
-  d1 = 20000;
-  v1 = Math.sqrt((G * m0) / d1) + 1;
-  console.log(v1);
-  particles.push(new Particle(1, 'O1', m1, r1, new Vector(-d1, 0, START_Z), new Vector(0, 0, v1)));
-
-  m2 = 4000;
-  r2 = 40;
-  d2 = 1000;
-  v2 = Math.sqrt((G * m1) / d2) + 1;
-  console.log(v2);
+  peru = 47001 * million;
+  r0 = 5000;
   particles.push(
-    new Particle(2, 'O2', m2, r2, new Vector(-d1, d2, START_Z), new Vector(0, 0, v1 + v2))
+    new Particle(0, 'O0', peru, r0, new Vector(-100, 0, START_Z), new Vector(-80, -10, -30))
   );
 
-  m3 = 100;
-  r3 = 10;
-  d3 = 100;
-  v3 = Math.sqrt((G * m2) / d3) + 1;
+  darkmagenta = 170 * million;
+  r1 = 10 * 170;
+  d1 = 40000;
+  v1 = Math.sqrt((G * peru) / d1) + 1;
+  console.log(v1);
+  particles.push(
+    new Particle(1, 'O1', darkmagenta, r1, new Vector(-d1, 0, START_Z), new Vector(50, v1, 0))
+  );
+
+  dodgerblue = 155 * million;
+  r2 = 10 * 155;
+  d2 = 10000;
+  v2 = Math.sqrt((G * darkmagenta) / d2) + 1;
+  console.log(v2);
+  particles.push(
+    new Particle(
+      2,
+      'O2',
+      dodgerblue,
+      r2,
+      new Vector(d1, d2, START_Z),
+      new Vector(600, v2 - v1, 1200)
+    )
+  );
+
+  yellowgreen = 3900 * million;
+  r3 = 1000;
+  d3 = 1000;
+  v3 = Math.sqrt((G * peru) / d3) + 1;
   console.log(v3);
   particles.push(
-    new Particle(3, 'O3', m3, r3, new Vector(-d1 + d3, d2, START_Z), new Vector(0, 0, v1 + v2 + v3))
+    new Particle(
+      3,
+      'O3',
+      yellowgreen,
+      r3,
+      new Vector(d1, d3, START_Z + 1600),
+      new Vector(1010, -30, v3 - 25000)
+    )
+  );
+
+  crimson = 180 * million;
+  r4 = 10 * 180;
+  d4 = 1000;
+  v4 = Math.sqrt((G * yellowgreen) / d4) + 1;
+  console.log(v4);
+  particles.push(
+    new Particle(
+      4,
+      'O4',
+      crimson,
+      r4,
+      new Vector(d1 + d3, d3 + d4, START_Z + d3 + d4 + 2000),
+      new Vector(1800, -400, 5400)
+    )
   );
 }
 
@@ -193,7 +229,7 @@ function setupScreen() {
   screen.width = WIDTH;
   screen.height = HEIGHT;
   screenContext = screen.getContext('2d');
-  cameraLocation = new Vector(0, 0, 0);
+  cameraLocation = new Vector(0, 0, -1500000);
   clearScreen();
 }
 
