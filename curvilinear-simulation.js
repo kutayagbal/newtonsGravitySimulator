@@ -1,40 +1,17 @@
 let screenContext = null;
 let cameraLocation = null;
 let ARROW_JUMP = 100;
-let START_Z = 100000;
+const million = 1000000;
+let START_Z = 100 * million;
 let particles = [];
 const t = 1;
-const G = 21.54;
+const G = 667 / (100 * million);
 let WIDTH = 0;
 let HEIGHT = 0;
-let RADIUS = 0;
 let SIMULATION_INTERVAL = 0.001;
-const million = 1000000;
-const colors = [
-  'peru',
-  'darkmagenta',
-  'dodgerblue',
-  'yellowgreen',
-  'crimson',
-  'grey',
-  'lightpink',
-  'yellowgreen',
-  'white',
-  'lightgrey',
-  'brown',
-  'beige',
-  'goldenrod',
-  'powderblue',
-  'dodgerblue',
-  'seagreen',
-  'lime',
-  'pink',
-  'violet',
-  'tomato',
-  'teal',
-  'silver',
-  'peru',
-];
+let R = 10 * million;
+
+const colors = ['peru', 'dodgerblue', 'darkmagenta', 'black', 'crimson'];
 //----------//----------//----------//----------//----------//----------
 
 document.addEventListener('keyup', e => {
@@ -60,7 +37,7 @@ document.addEventListener('keyup', e => {
   } else if (e.code === 'KeyS') {
     cameraLocation.z -= jumpAmount;
   }
-  clearScreen();
+  // clearScreen();
 });
 class Vector {
   constructor(x, y, z) {
@@ -83,41 +60,48 @@ class Particle {
   }
 
   project() {
-    var centerPathX = 0;
-    var centerPathY = 0;
-    let centerX = parseInt(this.nextLocation.x - cameraLocation.x);
-    let centerY = parseInt(this.nextLocation.y - cameraLocation.y);
-    let centralDistanceToCamera = Math.sqrt(
-      Math.pow(centerX, 2) +
-        Math.pow(centerY, 2) +
-        Math.pow(this.nextLocation.z - cameraLocation.z, 2)
-    );
-    centerPathX = (RADIUS * centerX) / centralDistanceToCamera;
-    centerPathY = (RADIUS * centerY) / centralDistanceToCamera;
+    // if (this.id == 3) {
+    //   return;
+    // }
 
-    var surfacePathX = 0;
-    var surfacePathY = 0;
-    let surfaceX = parseInt(this.nextLocation.x - cameraLocation.x) + this.radius;
-    let surfaceY = parseInt(this.nextLocation.y - cameraLocation.y);
-    let surfaceDistanceToCamera = Math.sqrt(
-      Math.pow(surfaceX, 2) +
-        Math.pow(surfaceY, 2) +
-        Math.pow(this.nextLocation.z - cameraLocation.z, 2)
+    var centerCurvyDist = Math.sqrt(
+      Math.pow(this.nextLocation.x, 2) +
+        Math.pow(this.nextLocation.y, 2) +
+        Math.pow(this.nextLocation.z, 2)
     );
-    surfacePathX = (RADIUS * surfaceX) / surfaceDistanceToCamera;
-    surfacePathY = (RADIUS * surfaceY) / surfaceDistanceToCamera;
+
+    if (centerCurvyDist === 0) {
+      centerCurvyDist = 1;
+    }
+
+    var centerCurvyX = (R * this.nextLocation.x) / centerCurvyDist;
+    var centerCurvyY = (R * this.nextLocation.y) / centerCurvyDist;
+
+    var surfaceCurvyDist = Math.sqrt(
+      Math.pow(this.nextLocation.x + this.radius, 2) +
+        Math.pow(this.nextLocation.y + this.radius, 2) +
+        Math.pow(this.nextLocation.z + this.radius, 2)
+    );
+
+    if (surfaceCurvyDist === 0) {
+      surfaceCurvyDist = 1;
+    }
+
+    var surfaceCurvyX = (R * (this.nextLocation.x + this.radius)) / surfaceCurvyDist;
+    var surfaceCurvyY = (R * (this.nextLocation.y + this.radius)) / surfaceCurvyDist;
 
     let screenRadius = Math.sqrt(
-      Math.pow(surfacePathX - centerPathX, 2) + Math.pow(surfacePathY - centerPathY, 2)
+      Math.pow(surfaceCurvyX - centerCurvyX, 2) + Math.pow(surfaceCurvyY - centerCurvyY, 2)
     );
 
     screenContext.fillStyle = this.getColor();
     if (screenRadius > 0 && cameraLocation.z < this.nextLocation.z) {
       screenContext.beginPath();
       screenContext.globalAlpha = 1;
+
       screenContext.arc(
-        WIDTH / 2 + centerPathX,
-        HEIGHT / 2 - centerPathY,
+        WIDTH / 2 + centerCurvyX,
+        HEIGHT / 2 - centerCurvyY,
         screenRadius,
         0,
         Math.PI * 2
@@ -125,7 +109,6 @@ class Particle {
       screenContext.closePath();
       screenContext.fill();
     }
-    return { centerPathX, centerPathY, screenRadius };
   }
 
   getColor() {
@@ -157,67 +140,38 @@ function startSimulation() {
 }
 
 function createSystem() {
-  peru = 47001 * million;
-  r0 = 5000;
+  yellowgreen = 300 * million;
+  r3 = 10;
   particles.push(
-    new Particle(0, 'O0', peru, r0, new Vector(-100, 0, START_Z), new Vector(-80, -10, -30))
+    new Particle(3, 'O3', yellowgreen, r3, new Vector(600, 0, START_Z), new Vector(0, 0, -1))
   );
 
-  darkmagenta = 170 * million;
-  r1 = 10 * 170;
-  d1 = 40000;
-  v1 = Math.sqrt((G * peru) / d1) + 1;
-  console.log(v1);
+  dodgerblue = 5 * million;
+  r2 = 200;
+  d0 = 5000;
+  v0 = Math.sqrt((G * yellowgreen) / d0);
   particles.push(
-    new Particle(1, 'O1', darkmagenta, r1, new Vector(-d1, 0, START_Z), new Vector(50, v1, 0))
+    new Particle(1, 'O1', dodgerblue, r2, new Vector(0, d0, START_Z), new Vector(0, 0, v0))
   );
 
-  dodgerblue = 155 * million;
-  r2 = 10 * 155;
-  d2 = 10000;
-  v2 = Math.sqrt((G * darkmagenta) / d2) + 1;
-  console.log(v2);
+  darkmagenta = 1 * million;
+  r1 = 40;
+  d1 = 20000;
   particles.push(
-    new Particle(
-      2,
-      'O2',
-      dodgerblue,
-      r2,
-      new Vector(d1, d2, START_Z),
-      new Vector(600, v2 - v1, 1200)
-    )
+    new Particle(2, 'O2', darkmagenta, r1, new Vector(0, -d0, START_Z), new Vector(0, 0, -v0))
   );
 
-  yellowgreen = 3900 * million;
-  r3 = 1000;
-  d3 = 1000;
-  v3 = Math.sqrt((G * peru) / d3) + 1;
-  console.log(v3);
+  crimson = 5 * million;
+  r4 = 200;
+  v1 = Math.sqrt((G * yellowgreen) / d1);
   particles.push(
-    new Particle(
-      3,
-      'O3',
-      yellowgreen,
-      r3,
-      new Vector(d1, d3, START_Z + 1600),
-      new Vector(1010, -30, v3 - 25000)
-    )
+    new Particle(4, 'O4', crimson, r4, new Vector(-3400, 0, START_Z), new Vector(0, 0, -v1))
   );
 
-  crimson = 180 * million;
-  r4 = 10 * 180;
-  d4 = 1000;
-  v4 = Math.sqrt((G * yellowgreen) / d4) + 1;
-  console.log(v4);
+  peru = 1 * million;
+  r0 = 40;
   particles.push(
-    new Particle(
-      4,
-      'O4',
-      crimson,
-      r4,
-      new Vector(d1 + d3, d3 + d4, START_Z + d3 + d4 + 2000),
-      new Vector(1800, -400, 5400)
-    )
+    new Particle(0, 'O0', peru, r0, new Vector(4600, 0, START_Z), new Vector(0, 0, v1))
   );
 }
 
@@ -225,11 +179,10 @@ function setupScreen() {
   const screen = document.getElementById('screen');
   WIDTH = window.innerWidth;
   HEIGHT = window.innerHeight;
-  RADIUS = 7 * HEIGHT;
   screen.width = WIDTH;
   screen.height = HEIGHT;
   screenContext = screen.getContext('2d');
-  cameraLocation = new Vector(0, 0, -1500000);
+  cameraLocation = new Vector(0, 0, 0);
   clearScreen();
 }
 
@@ -245,7 +198,7 @@ function simulate() {
 }
 
 function projectParticles() {
-  clearScreen();
+  // clearScreen();
 
   showCameraLocationInfo();
 
@@ -259,11 +212,11 @@ function showParticleLocationInfo(particle) {
   screenContext.fillText(
     particle.title +
       ': ' +
-      ((particle.location.x - cameraLocation.x) / ARROW_JUMP).toFixed(1) +
+      (particle.location.x / ARROW_JUMP).toFixed(1) +
       ', ' +
-      ((particle.location.y - cameraLocation.y) / ARROW_JUMP).toFixed(1) +
+      (particle.location.y / ARROW_JUMP).toFixed(1) +
       ', ' +
-      ((particle.location.z - cameraLocation.z) / ARROW_JUMP).toFixed(1),
+      (particle.location.z / ARROW_JUMP).toFixed(1),
     10,
     15 * particle.id + 30
   );
@@ -299,6 +252,14 @@ function calculateNextLocationAndVelocity(particle) {
   particle.nextVelocity = nextVelocity;
 }
 
+function _calculateNextLocationAndVelocity(particle) {
+  particle.nextLocation = new Vector(
+    particle.location.x + particle.velocity.x * t,
+    particle.location.y + particle.velocity.y * t,
+    particle.location.z + particle.velocity.z * t
+  );
+}
+
 //for t=1 acceleration and velocity is the same vector.
 function calculateNextVelocity(currentParticle) {
   let distanceSquared = 0;
@@ -332,10 +293,10 @@ function calculateNextVelocity(currentParticle) {
   return totalAcceleration;
 }
 
-function transformLocation(location, referenceLocation) {
+function transformLocation(referenceLocation, location) {
   return new Vector(
-    location.x - referenceLocation.x,
-    location.y - referenceLocation.y,
-    location.z - referenceLocation.z
+    referenceLocation.x - location.x,
+    referenceLocation.y - location.y,
+    referenceLocation.z - location.z
   );
 }
